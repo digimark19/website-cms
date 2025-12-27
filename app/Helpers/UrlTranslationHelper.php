@@ -121,16 +121,18 @@ class UrlTranslationHelper
 
                 foreach ($locales as $locale) {
                     $translated = $translations->firstWhere('lang', $locale->code);
-                    $slugPage = $translated->is_main ?"/":"/".$translated->slug;
-                    $urlPage = url($locale->url_prefix.$slugPage);
-                    
-                    $urls[] = [
-                        'code' => $locale->code,
-                        'name' => $locale->name,
-                        'native_name' => $locale->native_name,
-                        'is_default' => (bool) $locale->is_default,
-                        'url' => $urlPage,
-                    ];
+                    if($translated!=null){
+                        $slugPage = $translated->is_main ?"":"/".$translated->slug;
+                        $urlPage = url($locale->url_prefix.$slugPage);
+                        
+                        $urls[] = [
+                            'code' => $locale->code,
+                            'name' => $locale->name,
+                            'native_name' => $locale->native_name,
+                            'is_default' => (bool) $locale->is_default,
+                            'url' => $urlPage,
+                        ];
+                    }
                 }
 
                 return $urls;

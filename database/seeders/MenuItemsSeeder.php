@@ -16,7 +16,7 @@ class MenuItemsSeeder extends Seeder
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 
         $pages = [
-            ['slug' => 'home', 'position' => 1],
+            ['slug' => 'inicio', 'position' => 1],
             ['slug' => 'propiedades', 'position' => 2],
             [
                 'slug' => '#', 
@@ -47,7 +47,7 @@ class MenuItemsSeeder extends Seeder
 
             // Traducción del slug al inglés
             $slugEn = match ($page['slug']) {
-                'home' => 'home',
+                'inicio' => 'home',
                 'propiedades' => 'properties',
                 'quiero-vender' => 'sell-your-property',
                 'blog' => 'blog',

@@ -53,7 +53,7 @@ class PagesSeeder extends Seeder
                     'lang' => 'en',
                     'title' => match ($page['title']) {
                         'Home' => 'Home',
-                        'Desarrollos' => '#',
+                        'Desarrollos' => 'Developments',
                         'Propiedades' => 'Properties',
                         'Quiero vender' => 'Sell Your Property',
                         'Blog' => 'Blog',
@@ -65,7 +65,7 @@ class PagesSeeder extends Seeder
                     },
                     'slug' => match ($page['slug']) {
                         'home' => 'home',
-                        'desarrollos' => '#',
+                        'desarrollos' => 'developments',
                         'propiedades' => 'properties',
                         'quiero-vender' => 'sell-your-property',
                         'blog' => 'blog',
