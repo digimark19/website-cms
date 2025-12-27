@@ -12,7 +12,7 @@ class PageController extends Controller
         $locale = app()->getLocale(); // idioma actual
 
         // Si no hay slug, asumimos la página principal
-        $slug = $slug ?: 'home'; 
+        // $slug = $slug == 'home' ?'':$slug; 
 
         // Buscar la traducción según slug e idioma
         $pageTranslation = PageTranslation::where('slug', $slug)

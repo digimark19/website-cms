@@ -35,8 +35,8 @@ foreach ($languages as $lang) {
             foreach ($pages as $page) {
                 $translation = $page->translations->firstWhere('lang', $lang->code);
                 if (!$translation) continue;
-
-                $uri = ($page->is_main) ? "/" : $translation->slug;
+                // $ismain = $translation->is_main;
+                $uri = ($translation->is_main) ? "/" : $translation->slug;
 
                 Route::get($uri, function () use ($translation) {
                     return app(PageController::class)->show($translation->slug);
@@ -76,3 +76,15 @@ Route::post('/form-contact/store', [\App\Http\Controllers\ContactController::cla
 Route::post('/newsletter', [NewsletterController::class, 'store'])->name('newsletter.store');
 Route::get('/newsletter/unsubscribe/{email}', [NewsletterController::class, 'unsubscribe'])->name('newsletter.unsubscribe');
 
+Route::get('/hola', function () {
+    return 'Hola, Laravel funciona perfectamente connected a la DB: ' . DB::connection()->getDatabaseName();
+});
+
+Route::get('/limpiar-todo', function () {
+    Artisan::call('optimize:clear');
+    Artisan::call('cache:clear');
+    Artisan::call('route:clear');
+    Artisan::call('config:clear');
+    Artisan::call('view:clear');
+    return '¡Caché limpiada y sistema reiniciado!';
+});

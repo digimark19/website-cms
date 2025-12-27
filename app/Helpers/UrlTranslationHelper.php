@@ -8,6 +8,7 @@ use App\Models\BlogPostTranslation;
 use App\Models\BlogCategoryTranslation;
 use App\Models\BlogTagTranslation;
 use App\Models\Locale;
+use App\Models\SiteSetting;
 
 class UrlTranslationHelper
 {
@@ -19,6 +20,7 @@ class UrlTranslationHelper
         $currentLocale = app()->getLocale();
         $currentPath = trim(Request::path(), '/'); // ej. "en/blog/how-to-choose"
         $segments = explode('/', $currentPath);
+        $siteSettings = \App\Models\SiteSetting::first(); 
 
         // Obtener los idiomas activos
         $locales = Locale::where('is_active', true)->get();
@@ -35,6 +37,9 @@ class UrlTranslationHelper
         if (count($segments) >= 2 && $segments[0] === 'blog') {
             $slug = $segments[1];
             $translation = BlogPostTranslation::where('slug', $slug)->first();
+            $localeUrl = ($siteSettings->language == $locale->code)?"":$locale->code;
+            $slugPage = $translated->is_main ?"/":"/".$translated->slug;
+            $urlPage = url($localeUrl.$slugPage);
 
             if ($translation) {
                 $translations = BlogPostTranslation::where('blog_post_id', $translation->blog_post_id)->get();
@@ -116,14 +121,15 @@ class UrlTranslationHelper
 
                 foreach ($locales as $locale) {
                     $translated = $translations->firstWhere('lang', $locale->code);
+                    $slugPage = $translated->is_main ?"/":"/".$translated->slug;
+                    $urlPage = url($locale->url_prefix.$slugPage);
+                    
                     $urls[] = [
                         'code' => $locale->code,
                         'name' => $locale->name,
                         'native_name' => $locale->native_name,
                         'is_default' => (bool) $locale->is_default,
-                        'url' => $translated
-                            ? url($locale->code . '/' . $translated->slug)
-                            : url($locale->code),
+                        'url' => $urlPage,
                     ];
                 }
 
@@ -133,12 +139,15 @@ class UrlTranslationHelper
 
         // --- 5️⃣ Si no hay coincidencia, usar el home de cada idioma
         foreach ($locales as $locale) {
+            // Si el prefijo es null (idioma por defecto), usamos cadena vacía para ir a la raíz
+            $prefix = $locale->url_prefix ?? '';
+
             $urls[] = [
                 'code' => $locale->code,
                 'name' => $locale->name,
                 'native_name' => $locale->native_name,
                 'is_default' => (bool) $locale->is_default,
-                'url' => url($locale->code),
+                'url' => url($prefix),
             ];
         }
 

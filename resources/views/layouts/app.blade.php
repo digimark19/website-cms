@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>@yield('title', 'Mi Sitio')</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="preload" as="image" href="https://img.freepik.com/foto-gratis/mujer-trabajando-remotamente-casa_23-2150192195.jpg?semt=ais_hybrid&w=740&q=80"fetchpriority="high"
+/>
 
     {{-- Importa los assets compilados --}}
     @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -19,7 +21,7 @@
 <body class="bg-gray-50 text-gray-900 h-dvh pt-20">
 
     {{-- NAVBAR --}}
-    <x-navBar />
+    <x-navbar />
 
 
     {{-- CONTENIDO --}}

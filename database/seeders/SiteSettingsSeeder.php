@@ -14,7 +14,7 @@ class SiteSettingsSeeder extends Seeder
     public function run(): void
     {
         DB::table('site_settings')->insert([
-            'site_name' => 'Inmobien Inmobiliaria',
+            'site_name' => 'Dunarealty',
             'site_title' => 'Tu espacio, tu futuro',
             'site_description' => 'Líderes en bienes raíces con proyectos de alta plusvalía y diseño innovador.',
             'logo_path' => 'storage/images/logos/logo.png',
@@ -34,7 +34,7 @@ class SiteSettingsSeeder extends Seeder
                 "es" => "¡Hola! Me gustaría saber más sobre sus servicios.",
                 "fr" => "Bonjour ! J’aimerais en savoir plus sur vos services.",
             ]),
-            'email' => 'rachel@inmobien.com',
+            'email' => 'rachel@dunarealty.mx',
 
             // Redes sociales
             'facebook_url' => 'https://facebook.com/exagonoinmobiliaria',
@@ -54,7 +54,7 @@ class SiteSettingsSeeder extends Seeder
             'is_active' => true,
             'extra' => json_encode([
                 'schedule' => 'Lunes a Viernes: 9:00 - 18:00',
-                'support_email' => 'rachel@inmobien.com',
+                'support_email' => 'rachel@dunarealty.mx',
                 'theme_color' => '#004aad',
             ]),
 

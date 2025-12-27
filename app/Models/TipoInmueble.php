@@ -19,6 +19,10 @@ class TipoInmueble extends Model
         'updated_at',
     ];
 
+    protected $casts = [
+        'nombre' => 'array',
+    ];
+
     /**
      * Relación inversa: un tipo de inmueble tiene muchas propiedades
      */

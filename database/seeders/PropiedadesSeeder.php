@@ -11,11 +11,12 @@ class PropiedadesSeeder extends Seeder
     {
         // Localidades
         $localidades = [
-            ['es'=>'Playa del Carmen','en'=>'Playa del Carmen'],
-            ['es'=>'Tulum','en'=>'Tulum'],
-            ['es'=>'Mérida','en'=>'Merida'],
-            ['es'=>'Cancún','en'=>'Cancun'],
+            ['es' => 'La Paz BCS',     'en' => 'La Paz BCS'],
+            ['es' => 'Mazatlán Sinaloa',  'en' => 'Mazatlan Sinaloa'],
+            // ['es' => 'Mérida',    'en' => 'Merida'],
+            // ['es' => 'Culiacán',  'en' => 'Culiacan'],
         ];
+
         foreach ($localidades as $loc) {
             DB::table('localidades')->insert([
                 'nombre' => json_encode($loc),
@@ -23,32 +24,39 @@ class PropiedadesSeeder extends Seeder
                 'updated_at' => now(),
             ]);
         }
+
+        // IDs de localidades insertadas
         $localidadesIds = DB::table('localidades')->pluck('id')->toArray();
 
-        // Tipos de inmueble (incluyendo "Desarrollo")
-        $tiposInmueble = ['Desarrollo','Departamento','Casa','Condominio','Villa'];
-        foreach ($tiposInmueble as $tipo) {
-            DB::table('tipos_inmueble')->insert([
-                'nombre' => json_encode(['es'=>$tipo,'en'=>$tipo]),
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
-        }
+
+        // Tipos de inmueble
+        DB::table('tipos_inmueble')->insert([
+            ['nombre' => json_encode(['es' => 'Casa',           'en' => 'House'])],
+            ['nombre' => json_encode(['es' => 'Departamento',   'en' => 'Apartment'])],
+            ['nombre' => json_encode(['es' => 'Terreno',        'en' => 'Land'])],
+            ['nombre' => json_encode(['es' => 'Local',          'en' => 'Shop'])],
+            ['nombre' => json_encode(['es' => 'Oficina',        'en' => 'Office'])],
+            ['nombre' => json_encode(['es' => 'Desarrollo',     'en' => 'Development'])],
+        ]);
+
+        // IDs tipos de inmueble
         $tiposInmuebleIds = DB::table('tipos_inmueble')->pluck('id')->toArray();
 
+
         // Tipos de operación
-        $tiposOperacion = ['Venta','Renta','Preventa','Alquiler vacacional'];
-        foreach ($tiposOperacion as $op) {
-            DB::table('tipos_operacion')->insert([
-                'nombre' => json_encode(['es'=>$op,'en'=>$op]),
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
-        }
+        DB::table('tipos_operacion')->insert([
+            ['nombre' => json_encode(['es' => 'Venta',    'en' => 'Sale'])],
+            ['nombre' => json_encode(['es' => 'Renta',    'en' => 'Rent'])],
+            // ['nombre' => json_encode(['es' => 'Pre-venta','en' => 'Pre-sale'])],
+        ]);
+
+        // IDs tipos de operación
         $tiposOperacionIds = DB::table('tipos_operacion')->pluck('id')->toArray();
 
-        // Generar propiedades
+
+        // Generar propiedades fake
         for ($i = 1; $i <= 40; $i++) {
+
             $idTipoInmueble = $tiposInmuebleIds[array_rand($tiposInmuebleIds)];
             $idLocalidad = $localidadesIds[array_rand($localidadesIds)];
             $idTipoOperacion = $tiposOperacionIds[array_rand($tiposOperacionIds)];
@@ -56,18 +64,18 @@ class PropiedadesSeeder extends Seeder
             $precio = rand(100000, 1500000);
 
             DB::table('propiedades')->insert([
-                'id_localidad' => $idLocalidad,
-                'id_tipo_inmueble' => $idTipoInmueble,
-                'id_tipo_operacion' => $idTipoOperacion,
-                'nombre' => json_encode(['es'=>"Propiedad $i",'en'=>"Property $i"]),
-                'descripcion' => json_encode(['es'=>"Descripción de propiedad $i",'en'=>"Description of property $i"]),
-                'ubicacion' => json_encode(['es'=>"Ubicación $i",'en'=>"Location $i"]),
-                'latitud' => rand(2000000, 2200000)/100000,
-                'longitud' => rand(-9000000, -8700000)/100000,
-                'precio' => $precio,
-                'status' => 'disponible',
-                'created_at' => now(),
-                'updated_at' => now(),
+                'id_localidad'       => $idLocalidad,
+                'id_tipo_inmueble'   => $idTipoInmueble,
+                'id_tipo_operacion'  => $idTipoOperacion,
+                'nombre'             => json_encode(['es' => "Propiedad $i", 'en' => "Property $i"]),
+                'descripcion'        => json_encode(['es' => "Descripción de propiedad $i", 'en' => "Description of property $i"]),
+                'ubicacion'          => json_encode(['es' => "Ubicación $i", 'en' => "Location $i"]),
+                'latitud'            => rand(2000000, 2200000) / 100000,
+                'longitud'           => rand(-9000000, -8700000) / 100000,
+                'precio'             => $precio,
+                'status'             => 'disponible',
+                'created_at'         => now(),
+                'updated_at'         => now(),
             ]);
         }
 

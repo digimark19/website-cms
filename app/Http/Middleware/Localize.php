@@ -5,13 +5,14 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
+use App\Models\Locale;
 
 class Localize
 {
     public function handle($request, Closure $next)
     {
-        // Lista de idiomas soportados
-        $supported = ['es', 'en', 'fr']; // puedes agregar más idiomas aquí
+        // Lista de idiomas soportados que estan activos en la DB
+        $supported = Locale::where('is_active', true)->pluck('code')->toArray(); 
 
         // Tomar el primer segmento de la URL
         $segment = $request->segment(1);

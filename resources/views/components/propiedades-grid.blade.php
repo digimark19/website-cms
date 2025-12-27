@@ -1,5 +1,5 @@
 <a id="listado"></a>
-<div class="container mx-auto py-10">
+<div class="container mx-auto py-10 px-4">
     <!-- 🔍 Formulario de filtros -->
     <div x-data="{ advanced: @json(request()->has('advanced') ? true : false) }" class="bg-[#052669] rounded-lg p-6 mb-10 shadow-md">
 
@@ -387,7 +387,7 @@
 
 
 
-    {{-- 📄 Paginación --}}
+    {{-- 📄 Paginación con más espacio (Diseño Actualizado) --}}
     <div class="flex justify-center items-center space-x-2 mt-12 mb-24">
 
         {{-- Botón Anterior --}}
@@ -411,13 +411,13 @@
                 <span class="w-12 h-12 flex items-center justify-center border border-blue-600 bg-blue-600 text-white rounded-xl font-semibold">
                     {{ $page }}
                 </span>
-            @elseif ($page == 1 || $page == $propiedades->lastPage() || ($page >= $propiedades->currentPage() - 1 && $page <= $propiedades->currentPage() + 1))
+            @elseif($page == 1 || $page == $propiedades->lastPage() || ($page >= $propiedades->currentPage() - 1 && $page <= $propiedades->currentPage() + 1))
                 <a href="{{ $url }}" class="w-12 h-12 flex items-center justify-center border border-gray-300 rounded-xl hover:bg-gray-100 transition font-semibold">
                     {{ $page }}
                 </a>
-            @elseif ($page == 2 && $propiedades->currentPage() > 4)
+            @elseif($page == 2 && $propiedades->currentPage() > 4)
                 <span class="px-2 text-gray-500">...</span>
-            @elseif ($page == $propiedades->lastPage() - 1 && $propiedades->currentPage() < $propiedades->lastPage() - 3)
+            @elseif($page == $propiedades->lastPage() - 1 && $propiedades->currentPage() < $propiedades->lastPage() - 3)
                 <span class="px-2 text-gray-500">...</span>
             @endif
         @endforeach

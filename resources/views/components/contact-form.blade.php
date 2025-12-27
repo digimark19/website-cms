@@ -1,4 +1,7 @@
 @props(['tipo' => ''])
+@php
+    $uid = uniqid('form_'); // ID único para evitar conflictos
+@endphp
 
 <div class="max-w-3xl mx-auto font-[Inter]">
     <p class="text-gray-700 mb-6">
@@ -6,12 +9,12 @@
     </p>
 
     <!-- MENSAJE -->
-    <div id="formMessage" class="hidden mb-4 p-3 rounded text-white text-sm"></div>
+    <div id="formMessage-{{ $uid }}" class="hidden mb-4 p-3 rounded text-white text-sm"></div>
 
-    <form id="contactForm" class="space-y-6">
+    <form id="contactForm-{{ $uid }}" class="space-y-6">
 
         <!-- Input Hidden -->
-        <input type="hidden" name="tipo" id="tipo" value="{{ $tipo }}">
+        <input type="hidden" name="tipo" id="tipo-{{ $uid }}" value="{{ $tipo }}">
 
         <!-- GRID 2 COLUMNAS -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -68,8 +71,8 @@
 
         <!-- TÉRMINOS -->
         <div class="flex items-start gap-2">
-            <input type="checkbox" id="terminos" class="mt-1">
-            <label for="terminos" class="text-sm text-gray-700">
+            <input type="checkbox" id="terminos-{{ $uid }}" class="mt-1">
+            <label for="terminos-{{ $uid }}" class="text-sm text-gray-700">
                 Acepto los términos y condiciones <span class="text-red-500">*</span>
             </label>
         </div>
@@ -82,7 +85,7 @@
     </form>
 </div>
 
-<!-- ESTILOS -->
+<!-- ESTILOS (SIN CAMBIOS) -->
 <style>
     .input-modern {
         width: 100%;
@@ -118,35 +121,34 @@
     }
 </style>
 
-<!-- JS -->
+<!-- JS (MISMA LÓGICA, SOLO ENCAPSULADO) -->
 <script>
-    const form = document.getElementById("contactForm");
+(function() {
+
+    const form = document.getElementById("contactForm-{{ $uid }}");
+    const msg = document.getElementById("formMessage-{{ $uid }}");
+    const terminos = document.getElementById("terminos-{{ $uid }}");
     const submitBtn = form.querySelector("button[type=submit]");
 
     function mostrarMensaje(texto, tipo) {
-        const msg = document.getElementById("formMessage");
         msg.textContent = texto;
 
         msg.className = "mb-4 p-3 rounded text-white text-sm";
         msg.classList.add(tipo === "error" ? "bg-red-500" : "bg-green-600");
         msg.classList.remove("hidden");
 
-        // Desaparece en 5 segundos
-        setTimeout(() => {
-            msg.classList.add("hidden");
-        }, 5000);
+        // Desaparecer
+        setTimeout(() => msg.classList.add("hidden"), 5000);
     }
 
     form.addEventListener("submit", async function (e) {
         e.preventDefault();
 
         let valido = true;
-        let campos = document.querySelectorAll(".required-field");
+        let campos = form.querySelectorAll(".required-field");
 
-        // LIMPIAR ERRORES
         campos.forEach(c => c.classList.remove("error-field"));
 
-        // VALIDAR CAMPOS VACÍOS
         campos.forEach(c => {
             if (!c.value.trim()) {
                 c.classList.add("error-field");
@@ -154,8 +156,6 @@
             }
         });
 
-        // VALIDAR TÉRMINOS
-        const terminos = document.getElementById("terminos");
         if (!terminos.checked) {
             mostrarMensaje("Debes aceptar los términos y condiciones.", "error");
             valido = false;
@@ -166,11 +166,9 @@
             return;
         }
 
-        // BLOQUEAR BOTÓN
         submitBtn.disabled = true;
         submitBtn.textContent = "Enviando...";
 
-        // ENVIAR DATOS
         const formData = new FormData(form);
 
         try {
@@ -188,14 +186,13 @@
             } else {
                 mostrarMensaje(data.message ?? "Hubo un error al enviar el formulario.", "error");
             }
-
         } catch (error) {
-            console.log(error.message)
             mostrarMensaje("Error de conexión. Intenta nuevamente.", "error");
         }
 
-        // REACTIVAR BOTÓN
         submitBtn.disabled = false;
         submitBtn.textContent = "Enviar";
     });
+
+})();
 </script>

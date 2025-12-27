@@ -9,10 +9,26 @@ class MenuItemsSeeder extends Seeder
 {
     public function run(): void
     {
+        // Limpiar tablas para evitar duplicados
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        DB::table('menu_items')->truncate();
+        DB::table('menu_item_translations')->truncate();
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+
         $pages = [
             ['slug' => 'home', 'position' => 1],
             ['slug' => 'propiedades', 'position' => 2],
-            ['slug' => 'desarrollos', 'position' => 3],
+            [
+                'slug' => '#', 
+                'position' => 3, 
+                'title_es' => 'Desarrollos',
+                'title_en' => 'Developments',
+                'children' => [
+                    ['slug' => 'torre-futura', 'title_es' => 'Torre Futura', 'title_en' => 'Future Tower'],
+                    ['slug' => 'residencial-verde', 'title_es' => 'Residencial Verde', 'title_en' => 'Green Residential'],
+                    ['slug' => 'lago-azul', 'title_es' => 'Lago Azul', 'title_en' => 'Blue Lake'],
+                ]
+            ],
             ['slug' => 'quiero-vender', 'position' => 4],
             ['slug' => 'blog', 'position' => 5],
             ['slug' => 'nosotros', 'position' => 6],
@@ -27,19 +43,20 @@ class MenuItemsSeeder extends Seeder
                 'is_active' => true,
             ]);
 
-            $titleEs = ucfirst(str_replace('-', ' ', $page['slug']));
+            $titleEs = $page['title_es'] ?? ucfirst(str_replace('-', ' ', $page['slug']));
 
             // Traducción del slug al inglés
             $slugEn = match ($page['slug']) {
                 'home' => 'home',
                 'propiedades' => 'properties',
-                'desarrollos' => 'developments',
                 'quiero-vender' => 'sell-your-property',
                 'blog' => 'blog',
                 'nosotros' => 'about-us',
                 'contacto' => 'contact',
                 default => $page['slug'],
             };
+
+            $titleEn = $page['title_en'] ?? ucfirst(str_replace('-', ' ', $slugEn));
 
             DB::table('menu_item_translations')->insert([
                 [
@@ -51,16 +68,37 @@ class MenuItemsSeeder extends Seeder
                 [
                     'menu_item_id' => $menuItemId,
                     'locale_code' => 'en',
-                    'title' => ucfirst(str_replace('-', ' ', $slugEn)),
+                    'title' => $titleEn,
                     'slug' => $slugEn,
                 ],
-                // [
-                //     'menu_item_id' => $menuItemId,
-                //     'locale_code' => 'fr',
-                //     'title' => $titleEs, // podrías traducir también si lo deseas
-                //     'slug' => $page['slug'],
-                // ],
             ]);
+
+            // Insertar hijos si existen
+            if (isset($page['children']) && is_array($page['children'])) {
+                foreach ($page['children'] as $index => $child) {
+                    $childId = DB::table('menu_items')->insertGetId([
+                        'menu_code' => 'main',
+                        'parent_id' => $menuItemId,
+                        'position' => $index + 1,
+                        'is_active' => true,
+                    ]);
+
+                    DB::table('menu_item_translations')->insert([
+                        [
+                            'menu_item_id' => $childId,
+                            'locale_code' => 'es',
+                            'title' => $child['title_es'],
+                            'slug' => $child['slug'],
+                        ],
+                        [
+                            'menu_item_id' => $childId,
+                            'locale_code' => 'en',
+                            'title' => $child['title_en'] ?? $child['title_es'],
+                            'slug' => $child['slug'], // Asumimos mismo slug para simplificar, o agregar lógica si se requiere distinto
+                        ],
+                    ]);
+                }
+            }
         }
     }
 }

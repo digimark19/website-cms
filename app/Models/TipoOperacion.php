@@ -12,6 +12,10 @@ class TipoOperacion extends Model
     protected $table = 'tipos_operacion';
     protected $fillable = ['nombre'];
 
+    protected $casts = [
+        'nombre' => 'array',
+    ];
+
     // Relación inversa (una operación puede estar asociada a muchas propiedades)
     public function propiedades()
     {

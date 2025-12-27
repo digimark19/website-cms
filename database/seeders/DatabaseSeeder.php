@@ -22,15 +22,16 @@ class DatabaseSeeder extends Seeder
             SiteSettingsSeeder::class,
             BlogSeeder::class,
             PagesSeeder::class,
-            TiposInmuebleSeeder::class,
-            TiposOperacionSeeder::class,
+            // TiposInmuebleSeeder::class,
+            // TiposOperacionSeeder::class,
             AmenidadesSeeder::class,
-            LocalidadesSeeder::class,
+            // LocalidadesSeeder::class,
             PropiedadesSeeder::class,
             PropiedadAmenidadSeeder::class,
             GaleriasSeeder::class,
             CaracteristicasSeeder::class,
             PropiedadCaracteristicaSeeder::class,
+            MenuItemsSeeder::class
         ]);
 
         User::factory()->create([

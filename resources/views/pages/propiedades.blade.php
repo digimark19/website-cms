@@ -4,6 +4,6 @@
 
 @section('content')
 
-    <x-propiedades-grid />
+    @livewire('buscador')
 
 @endsection

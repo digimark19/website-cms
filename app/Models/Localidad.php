@@ -12,6 +12,10 @@ class Localidad extends Model
     
     protected $fillable = ['id', 'nombre', 'activo'];
 
+    protected $casts = [
+        'nombre' => 'array',
+    ];
+
     public function propiedades()
     {
         return $this->hasMany(Propiedad::class, 'id', 'nombre');

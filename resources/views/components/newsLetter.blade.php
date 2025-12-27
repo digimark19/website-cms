@@ -21,10 +21,14 @@
                 required
             >
             <button 
+                id="newsletterBtn"
                 type="submit" 
-                class="bg-[#FF8A65] text-white px-6 py-3 rounded-lg hover:bg-[#ff7b54] transition-all w-full sm:w-auto font-semibold shadow-md"
+                class="bg-[#FF8A65] text-white px-6 py-3 rounded-lg hover:bg-[#ff7b54] transition-all w-full sm:w-auto font-semibold shadow-md flex justify-center items-center min-w-[120px]"
             >
-                {{ $content['btnTittle'] ?? 'Suscribirme' }}
+                <span id="newsletterBtnText">{{ $content['btnTittle'] ?? 'Suscribirme' }}</span>
+                <span id="newsletterBtnLoader" class="hidden ml-2">
+                    <i class="fa-solid fa-circle-notch fa-spin"></i>
+                </span>
             </button>
         </form>
     </div>
@@ -39,9 +43,17 @@
 document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('newsletterForm');
     const messageBox = document.getElementById('newsletterMessage');
+    const btn = document.getElementById('newsletterBtn');
+    const btnText = document.getElementById('newsletterBtnText');
+    const btnLoader = document.getElementById('newsletterBtnLoader');
 
     form.addEventListener('submit', function(e) {
         e.preventDefault();
+
+        // Estado de carga
+        btn.disabled = true;
+        btnText.classList.add('hidden');
+        btnLoader.classList.remove('hidden');
 
         const formData = new FormData(form);
 
@@ -60,6 +72,12 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .catch(err => {
             showMessage('error', 'Ocurrió un error, intenta de nuevo.');
+        })
+        .finally(() => {
+            // Restaurar estado
+            btn.disabled = false;
+            btnText.classList.remove('hidden');
+            btnLoader.classList.add('hidden');
         });
     });
 

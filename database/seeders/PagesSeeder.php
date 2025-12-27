@@ -12,7 +12,7 @@ class PagesSeeder extends Seeder
         $pages = [
             ['title' => 'Home', 'slug' => 'home', 'position' => 1, 'custom_view' => 'home'],
             ['title' => 'Propiedades', 'slug' => 'propiedades', 'position' => 2, 'custom_view' => 'propiedades'],
-            ['title' => 'Desarrollos', 'slug' => 'desarrollos', 'position' => 3, 'custom_view' => 'desarrollos'],
+            ['title' => 'Desarrollos', 'slug' => '#', 'position' => 3, 'custom_view' => 'desarrollos'],
             ['title' => 'Quiero vender', 'slug' => 'quiero-vender', 'position' => 4, 'custom_view' => 'quierovender'],
             ['title' => 'Blog', 'slug' => 'blog', 'position' => 5, 'custom_view' => 'blog'],
             ['title' => 'Nosotros', 'slug' => 'nosotros', 'position' => 6, 'custom_view' => 'nosotros'],
@@ -35,12 +35,15 @@ class PagesSeeder extends Seeder
             ]);
 
             // Traducciones
+            $is_main = $page['slug'] === 'home' ? 1 : 0;
+
             DB::table('page_translations')->insert([
                 [
                     'page_id' => $pageId,
                     'lang' => 'es',
                     'title' => $page['title'],
                     'slug' => $page['slug'],
+                    'is_main' => $is_main,
                     'content' => "<h1>{$page['title']} (ES)</h1><p>Contenido en español.</p>",
                     'created_at' => now(),
                     'updated_at' => now(),
@@ -50,7 +53,7 @@ class PagesSeeder extends Seeder
                     'lang' => 'en',
                     'title' => match ($page['title']) {
                         'Home' => 'Home',
-                        'Desarrollos' => 'Developments',
+                        'Desarrollos' => '#',
                         'Propiedades' => 'Properties',
                         'Quiero vender' => 'Sell Your Property',
                         'Blog' => 'Blog',
@@ -62,7 +65,7 @@ class PagesSeeder extends Seeder
                     },
                     'slug' => match ($page['slug']) {
                         'home' => 'home',
-                        'desarrollos' => 'developments',
+                        'desarrollos' => '#',
                         'propiedades' => 'properties',
                         'quiero-vender' => 'sell-your-property',
                         'blog' => 'blog',
@@ -72,6 +75,7 @@ class PagesSeeder extends Seeder
                         'terminos-y-condiciones' => 'terms-and-conditions',
                         default => $page['slug'],
                     },
+                    'is_main' => $is_main,
                     'content' => "<h1>{$page['title']} (EN)</h1><p>English content here.</p>",
                     'created_at' => now(),
                     'updated_at' => now(),
