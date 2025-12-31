@@ -3,7 +3,7 @@
 <div class="relative w-full bg-cover bg-center flex flex-col justify-end pb-[8vh] min-h-[65vh]"
      style="{{ $bgStyle }}">
     
-    <div class="relative z-10 w-full container mx-auto px-4 text-center">
+    <div class="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         {{-- Título --}}
         @if($title)
             <div class="px-4">

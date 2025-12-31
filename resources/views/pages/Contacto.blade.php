@@ -7,7 +7,7 @@
     
     <x-hero />
     <!-- Be present above all else. - Naval Ravikant -->
-    <x-contact-form tipo="contacto" />
+    <x-formularioOne />
     
     <x-mapa />
 

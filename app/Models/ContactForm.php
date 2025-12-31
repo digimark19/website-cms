@@ -12,6 +12,7 @@ class ContactForm extends Model
         'nombre',
         'apellido',
         'correo',
+        'lada',
         'telefono',
         'pais',
         'ciudad',

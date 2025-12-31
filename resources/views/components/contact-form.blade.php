@@ -3,7 +3,7 @@
     $uid = uniqid('form_'); // ID único para evitar conflictos
 @endphp
 
-<div class="max-w-3xl mx-auto font-[Inter]">
+<div class="max-w-3xl mx-auto font-rubik">
     <p class="text-gray-700 mb-6">
         Déjanos tu información y en breve nos pondremos en contacto contigo.
     </p>
@@ -37,29 +37,70 @@
                 <input type="email" name="correo" class="input-modern required-field">
             </div>
 
-            <!-- Teléfono -->
-            <div>
-                <label class="label-required">Teléfono <span>*</span></label>
-                <input type="text" name="telefono" class="input-modern required-field">
-            </div>
-
-            <!-- País -->
-            <div>
-                <label class="label-required">País <span>*</span></label>
-                <select name="pais" class="input-modern required-field">
-                    <option value="">Selecciona un país</option>
-                    <option value="México">México</option>
-                    <option value="Colombia">Colombia</option>
-                    <option value="Argentina">Argentina</option>
-                    <option value="Chile">Chile</option>
-                    <option value="Perú">Perú</option>
-                </select>
-            </div>
-
             <!-- Ciudad -->
             <div>
                 <label class="label-required">Ciudad <span>*</span></label>
                 <input type="text" name="ciudad" class="input-modern required-field">
+            </div>
+        </div>
+
+        <!-- Teléfono con Lada -->
+        <div class="mt-4" x-data="{ 
+            open: false, 
+            selectedLada: '+52', 
+            selectedFlag: '🇲🇽',
+            ladas: [
+                { code: '+52', flag: '🇲🇽', name: 'México' },
+                { code: '+1', flag: '🇺🇸', name: 'USA' },
+                { code: '+57', flag: '🇨🇴', name: 'Colombia' },
+                { code: '+54', flag: '🇦🇷', name: 'Argentina' },
+                { code: '+34', flag: '🇪🇸', name: 'España' },
+                { code: '+56', flag: '🇨🇱', name: 'Chile' },
+                { code: '+51', flag: '🇵🇪', name: 'Perú' }
+            ]
+        }">
+            <label class="label-required">Teléfono <span>*</span></label>
+            <div class="flex gap-2 relative">
+                {{-- Hidden input for the form --}}
+                <input type="hidden" name="lada" :value="selectedLada">
+
+                {{-- Custom Selector --}}
+                <div class="w-28 flex-shrink-0 relative">
+                    <button 
+                        @click="open = !open" 
+                        type="button"
+                        class="input-modern w-full flex items-center justify-between cursor-pointer text-sm bg-[#F5F5F5] px-3 py-3 rounded-md"
+                    >
+                        <span x-text="selectedFlag + ' ' + selectedLada"></span>
+                        <i class="fas fa-chevron-down text-xs opacity-50"></i>
+                    </button>
+
+                    {{-- Dropdown List --}}
+                    <div 
+                        x-show="open" 
+                        @click.away="open = false"
+                        class="absolute left-0 mt-1 w-48 bg-white border border-gray-200 rounded-lg shadow-xl z-[100] max-h-60 overflow-y-auto"
+                        x-transition:enter="transition ease-out duration-100"
+                        x-transition:enter-start="transform opacity-0 scale-95"
+                        x-transition:enter-end="transform opacity-100 scale-100"
+                    >
+                        <template x-for="item in ladas" :key="item.code">
+                            <div 
+                                @click="selectedLada = item.code; selectedFlag = item.flag; open = false"
+                                class="flex items-center gap-3 px-4 py-3 hover:bg-gray-100 cursor-pointer text-black transition-colors border-b border-gray-50 last:border-0"
+                            >
+                                <span class="text-lg" x-text="item.flag"></span>
+                                <span class="text-sm font-medium" x-text="item.code"></span>
+                                <span class="text-xs text-gray-500" x-text="item.name"></span>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+
+                {{-- Phone Container --}}
+                <div class="flex-1">
+                    <input type="text" name="telefono" class="input-modern required-field" placeholder="Número">
+                </div>
             </div>
         </div>
 
@@ -71,9 +112,20 @@
 
         <!-- TÉRMINOS -->
         <div class="flex items-start gap-2">
+            @php
+                $currentLocale = app()->getLocale();
+                $localeData = \App\Models\Locale::where('code', $currentLocale)->first();
+                $prefix = ($localeData && $localeData->url_prefix) ? $localeData->url_prefix : '';
+                
+                $slugTerminos = ($currentLocale === 'en') ? 'terms-and-conditions' : 'terminos-y-condiciones';
+                $slugPrivacidad = ($currentLocale === 'en') ? 'privacy-policy' : 'aviso-de-privacidad';
+                
+                $urlTerminos = url($prefix . '/' . $slugTerminos);
+                $urlPrivacidad = url($prefix . '/' . $slugPrivacidad);
+            @endphp
             <input type="checkbox" id="terminos-{{ $uid }}" class="mt-1">
             <label for="terminos-{{ $uid }}" class="text-sm text-gray-700">
-                Acepto los términos y condiciones <span class="text-red-500">*</span>
+                Acepto los <a href="{{ $urlTerminos }}" class="text-blue-600 hover:underline">términos y condiciones</a> y el <a href="{{ $urlPrivacidad }}" class="text-blue-600 hover:underline">aviso de privacidad</a> <span class="text-red-500">*</span>
             </label>
         </div>
 
@@ -95,10 +147,23 @@
         background: #F5F5F5;
         outline: none;
         transition: 0.2s;
+        color: black;
+        font-family: 'Rubik', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Apple Color Emoji', 'Twemoji Mozilla', 'Noto Color Emoji', 'Android Emoji', sans-serif;
     }
 
     .input-modern:focus {
         outline: 2px solid #ccc;
+    }
+
+    /* Estilos modernos cuando el campo está bloqueado */
+    .input-modern:disabled, 
+    button:disabled {
+        background: #EAEAEA !important;
+        color: #888 !important;
+        cursor: not-allowed;
+        opacity: 0.7;
+        filter: grayscale(0.5);
+        transition: all 0.3s ease;
     }
 
     .label-required {
@@ -171,27 +236,41 @@
 
         const formData = new FormData(form);
 
+        // Bloquear todos los campos
+        const allFields = form.querySelectorAll("input, textarea, button");
+        allFields.forEach(f => f.disabled = true);
+
         try {
             const res = await fetch("{{ route('form-contact.store') }}", {
                 method: "POST",
-                headers: { "X-CSRF-TOKEN": "{{ csrf_token() }}" },
+                headers: { 
+                    "X-CSRF-TOKEN": "{{ csrf_token() }}",
+                    "Accept": "application/json"
+                },
                 body: formData
             });
 
             const data = await res.json();
 
-            if (data.success) {
+            if (res.ok && data.success) {
                 mostrarMensaje("Formulario enviado correctamente.", "success");
                 form.reset();
             } else {
-                mostrarMensaje(data.message ?? "Hubo un error al enviar el formulario.", "error");
+                let errorMsg = data.message || "Hubo un error al enviar el formulario.";
+                if (data.errors) {
+                    errorMsg = Object.values(data.errors).flat().join(" ");
+                }
+                mostrarMensaje(errorMsg, "error");
             }
         } catch (error) {
+            console.log(error)
             mostrarMensaje("Error de conexión. Intenta nuevamente.", "error");
+        } finally {
+            // Re-habilitar campos
+            allFields.forEach(f => f.disabled = false);
+            submitBtn.disabled = false;
+            submitBtn.textContent = "Enviar";
         }
-
-        submitBtn.disabled = false;
-        submitBtn.textContent = "Enviar";
     });
 
 })();

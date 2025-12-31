@@ -13,6 +13,6 @@
 
     <x-procesoVenta />
 
-
+    <x-formularioOne />
 </div>
 @endsection

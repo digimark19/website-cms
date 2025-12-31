@@ -13,19 +13,34 @@ class ContactController extends Controller
             'nombre'   => 'required|string',
             'apellido' => 'required|string',
             'correo'   => 'required|email',
+            'lada'     => 'required|string',
             'telefono' => 'required|string',
-            'pais'     => 'required|string',
+            'pais'     => 'nullable|string',
             'ciudad'   => 'required|string',
             'mensaje'  => 'required|string',
             'tipo'     => 'required|string',
         ]);
 
+        // Mapeo de Lada a País
+        $paises = [
+            '+52' => 'México',
+            '+1'  => 'USA',
+            '+57' => 'Colombia',
+            '+54' => 'Argentina',
+            '+34' => 'España',
+            '+56' => 'Chile',
+            '+51' => 'Perú',
+        ];
+
+        $paisDetectado = $paises[$request->lada] ?? $request->pais ?? 'Otro';
+
         ContactForm::create([
             'nombre'      => $request->nombre,
             'apellido'    => $request->apellido,
             'correo'      => $request->correo,
+            'lada'        => $request->lada,
             'telefono'    => $request->telefono,
-            'pais'        => $request->pais,
+            'pais'        => $paisDetectado,
             'ciudad'      => $request->ciudad,
             'mensaje'     => $request->mensaje,
             'tipo'        => $request->tipo,

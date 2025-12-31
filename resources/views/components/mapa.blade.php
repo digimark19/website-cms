@@ -12,7 +12,9 @@ document.addEventListener("DOMContentLoaded", function () {
     var lng = {{ is_numeric($lng) && $lng != 0 ? $lng : ($siteSettings->longitude ?? 0) }};
     var zoom = {{ is_numeric($zoom) && $zoom != 0 ? $zoom : ($siteSettings->zoom ?? 16) }};
 
-    var map = L.map("mapa").setView([lat, lng], zoom);
+    var map = L.map("mapa", {
+        scrollWheelZoom: false
+    }).setView([lat, lng], zoom);
 
     // ❗ Este era TU error: lo tenías comentado
     L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {

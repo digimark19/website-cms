@@ -239,26 +239,70 @@
   </div>
 
   {{-- Popup Cotizar Ahora --}}
-  <div x-show="openQuote"
-       x-transition:enter="transition ease-out duration-300"
-       x-transition:enter-start="opacity-0 scale-90"
-       x-transition:enter-end="opacity-100 scale-100"
-       x-transition:leave="transition ease-in duration-200"
-       x-transition:leave-start="opacity-100 scale-100"
-       x-transition:leave-end="opacity-0 scale-90"
-       class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 overflow-auto p-4"
-       style="display: none;"
-       @click.away="openQuote = false">
-    <div class="bg-white rounded-xl shadow-xl w-full max-w-3xl p-6 relative overflow-auto max-h-[90vh]">
-        <button @click="openQuote = false" class="absolute top-4 right-4 text-gray-500 hover:text-gray-800">
-            <i class="fa-solid fa-xmark text-lg"></i>
-        </button>
-
-        <x-contact-form tipo="contacto" />
-        
+  <template x-teleport="body">
+    <div x-show="openQuote"
+         x-cloak
+         class="fixed inset-0 z-[9999] flex items-center justify-center p-4 sm:p-6"
+         role="dialog"
+         aria-modal="true">
+      
+      {{-- Background overlay con blur --}}
+      <div x-show="openQuote"
+           x-transition:enter="transition ease-out duration-300"
+           x-transition:enter-start="opacity-0"
+           x-transition:enter-end="opacity-100"
+           x-transition:leave="transition ease-in duration-200"
+           x-transition:leave-start="opacity-100"
+           x-transition:leave-end="opacity-0"
+           class="fixed inset-0 bg-black/60 backdrop-blur-sm"
+           @click="openQuote = false"></div>
+  
+      {{-- Modal Content --}}
+      <div x-show="openQuote"
+           x-transition:enter="transition ease-out duration-300"
+           x-transition:enter-start="opacity-0 scale-95 translate-y-4"
+           x-transition:enter-end="opacity-100 scale-100 translate-y-0"
+           x-transition:leave="transition ease-in duration-200"
+           x-transition:leave-start="opacity-100 scale-100 translate-y-0"
+           x-transition:leave-end="opacity-0 scale-95 translate-y-4"
+           class="relative bg-white rounded-2xl shadow-2xl w-full max-w-2xl overflow-hidden flex flex-col max-h-[90vh]">
+          
+          {{-- Header del modal --}}
+          <div class="flex items-center justify-between p-4 border-b border-gray-100">
+              <h3 class="text-xl font-bold text-[#052669]">Cotizar Propiedad</h3>
+              <button @click="openQuote = false" class="text-gray-400 hover:text-gray-600 p-2 transition-colors">
+                  <i class="fa-solid fa-xmark text-xl"></i>
+              </button>
+          </div>
+  
+          {{-- Cuerpo del modal (Scrollable) --}}
+          <div class="p-6 overflow-y-auto custom-scrollbar">
+              <x-contact-form tipo="cotizacion" />
+          </div>
+          
+      </div>
     </div>
-</div>
+  </template>
 </nav>
+
+<style>
+  [x-cloak] { display: none !important; }
+  
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #0AB3B6;
+    border-radius: 10px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #089fa1;
+  }
+</style>
 
 <!-- ReCAPTCHA script -->
 <!-- <script src="https://www.google.com/recaptcha/api.js" async defer></script> -->

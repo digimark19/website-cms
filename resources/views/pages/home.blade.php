@@ -21,7 +21,7 @@
     <!-- ALIANZAS COMERCIALES -->
     <x-cintillo />
 
-    <x-contact-form tipo="contacto" />
+    <x-formularioOne />
 
 
 

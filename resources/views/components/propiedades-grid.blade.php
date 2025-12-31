@@ -1,10 +1,16 @@
 <a id="listado"></a>
-<div class="container mx-auto py-4 px-4" x-data="{ loading: false }">
+<div class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8" 
+    x-data="{ 
+        loading: false, 
+        view: 'grid', 
+        mobile: window.innerWidth < 768 
+    }" 
+    @resize.window="mobile = window.innerWidth < 768">
     <!-- 🔍 Formulario de filtros -->
     <div x-data="{ advanced: @json(request()->has('advanced') ? true : false) }" class="bg-[#052669] rounded-lg p-4 mb-5 shadow-md relative">
 
         <!-- FORM PRINCIPAL -->
-        <form id="filtrosForm" method="GET" action="{{ $action ?? '#listado' }}" @submit="loading = true" class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-5 gap-4 items-end">
+        <form id="filtrosForm" method="GET" action="{{ $action ?? '#listado' }}" @submit="loading = true" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 items-end">
 
             <!-- Localidad -->
             <div>
@@ -94,9 +100,8 @@
             </div>
 
             @if($showResults)
-            <!-- ===== Contenedor para link filtros avanzados (izq) + orden (derecha) ===== -->
-            <!-- Ocupa toda la fila en lg: lo alineamos con justify-between -->
-            <div class="col-span-2 md:col-span-2 lg:col-span-5 flex justify-between items-center mt-2">
+            <!-- ===== Contenedor para link filtros avanzados (izq) ===== -->
+            <div class="col-span-1 md:col-span-2 lg:col-span-5 flex justify-start items-center mt-2">
 
                 <!-- Link filtros avanzados (no submit) -->
                 <button type="button"
@@ -105,22 +110,11 @@
                     {{ $labels['labelFiltrosAvanzados'] ?? 'Filtros avanzados' }}
                 </button>
 
-                <!-- Ordenamiento (envía el form automáticamente) -->
-                <select name="orden"
-                    onchange="document.getElementById('filtrosForm').submit()"
-                    class="bg-white border border-gray-300 rounded p-2 shadow-sm text-sm
-                    focus:outline-none focus:ring-0 focus:border-transparent
-                    focus:shadow-[0_0_8px_rgba(255,138,101,0.6)]">
-                    <option value="">{{ $labels['labelOrdenar'] ?? 'Ordenar por' }}</option>
-                    <option value="precio_asc"  {{ request('orden') == 'precio_asc' ? 'selected' : '' }}>{{ $labels['labelPriceMenorMayor'] ?? 'Precio: menor a mayor' }}</option>
-                    <option value="precio_desc" {{ request('orden') == 'precio_desc' ? 'selected' : '' }}>{{ $labels['labelPriceMayorMenor'] ?? 'Precio: mayor a menor' }}</option>
-                    <option value="recientes"   {{ request('orden') == 'recientes' ? 'selected' : '' }}>{{ $labels['labelMasReciente'] ?? 'Más recientes' }}</option>
-                </select>
             </div>
 
             <!-- ===== Filtros avanzados (ESTÁN DENTRO DEL FORM para que se envíen) ===== -->
-            <div x-show="advanced" x-transition class="col-span-2 md:col-span-2 lg:col-span-5 mt-4">
-                <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+            <div x-show="advanced" x-transition class="col-span-1 md:col-span-2 lg:col-span-5 mt-4">
+                <div class="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-6 gap-4">
 
                     <input type="number" name="banos" placeholder="{{ $labels['labelBanos'] ?? 'Baños' }}"
                         value="{{ request('banos') }}"
@@ -181,7 +175,7 @@
                 
                 {{-- Loading text --}}
                 <p class="text-xl font-semibold text-[#052669] mb-2">
-                    Buscando propiedades...
+                    {{ $labels['labelBuscandoPropiedad'] ?? 'Buscando propiedades...' }}
                 </p>
                 <div class="flex items-center justify-center space-x-1">
                     <div class="w-2 h-2 bg-[#0AB3B6] rounded-full animate-bounce" style="animation-delay: 0ms"></div>
@@ -231,6 +225,52 @@
 
 
     @if($showResults)
+    
+    {{-- 🛠️ BARRA DE HERRAMIENTAS (Toolbar) --}}
+    <div class="flex flex-col md:flex-row justify-between items-center bg-gray-50 border border-gray-200 rounded-lg p-3 mb-6 gap-4">
+        
+        {{-- Izquierda: Contador de resultados --}}
+        <div class="text-gray-700 font-medium whitespace-nowrap">
+            <span class="text-[#052669] font-bold">{{ $propiedades->total() }}</span> 
+            {{ $labels['labelPropiedadesEncontradas'] ?? 'propiedades encontradas' }}
+        </div>
+
+        {{-- Derecha: Toggles de Vista y Ordenamiento --}}
+        <div class="flex items-center gap-4 w-full md:w-auto justify-end">
+            
+            {{-- Toggles de Vista (Ocultos en móvil) --}}
+            <div class="hidden md:flex border border-gray-300 rounded-md overflow-hidden">
+                <button @click="view = 'grid'" 
+                    class="p-2 transition-colors duration-200 focus:outline-none"
+                    :class="view === 'grid' ? 'bg-[#FF8A65] text-white' : 'bg-white text-gray-400 hover:bg-gray-100'">
+                    <i class="fas fa-th-large"></i>
+                </button>
+                <button @click="view = 'list'" 
+                    class="p-2 transition-colors duration-200 focus:outline-none"
+                    :class="view === 'list' ? 'bg-[#FF8A65] text-white' : 'bg-white text-gray-400 hover:bg-gray-100'">
+                    <i class="fas fa-list"></i>
+                </button>
+            </div>
+
+            {{-- Ordenamiento (fuera del cuadro azul) --}}
+            <div class="relative min-w-[180px]">
+                <select name="orden"
+                    form="filtrosForm"
+                    onchange="document.getElementById('filtrosForm').submit()"
+                    class="w-full bg-white border border-gray-300 rounded p-2 shadow-sm text-sm
+                    focus:outline-none focus:ring-0 focus:border-transparent
+                    focus:shadow-[0_0_8px_rgba(255,138,101,0.6)] pl-8">
+                    <option value="">{{ $labels['labelOrdenar'] ?? 'Ordenar por' }}</option>
+                    <option value="precio_asc"  {{ request('orden') == 'precio_asc' ? 'selected' : '' }}>{{ $labels['labelPriceMenorMayor'] ?? 'Precio: menor a mayor' }}</option>
+                    <option value="precio_desc" {{ request('orden') == 'precio_desc' ? 'selected' : '' }}>{{ $labels['labelPriceMayorMenor'] ?? 'Precio: mayor a menor' }}</option>
+                    <option value="recientes"   {{ request('orden') == 'recientes' ? 'selected' : '' }}>{{ $labels['labelMasReciente'] ?? 'Más recientes' }}</option>
+                </select>
+                <i class="fas fa-sort-amount-down absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs"></i>
+            </div>
+
+        </div>
+    </div>
+
     {{-- 🏡 Listado de propiedades estilo Blog --}}
     <div>
         {{-- Loader para página de resultados (reemplaza la zona de resultados) --}}
@@ -267,35 +307,39 @@
             </div>
         </div>
 
-        <div x-show="!loading" class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-        @forelse ($propiedades as $prop)
-            @php
-                $currentLocale = app()->getLocale();
-                
-                $tipo = $prop->tipoInmueble->nombre;
-                $nombreTipo = $tipo[$currentLocale] ?? $tipo['es'] ?? 'Sin tipo';
+        <div x-show="!loading" 
+            :class="(view === 'grid' || mobile) ? 'grid gap-8 md:grid-cols-2 lg:grid-cols-3' : 'flex flex-col gap-6'"
+            style="display: none;" class="w-full">
+            @forelse ($propiedades as $prop)
+                @php
+                    $currentLocale = app()->getLocale();
+                    
+                    $tipo = $prop->tipoInmueble->nombre;
+                    $nombreTipo = $tipo[$currentLocale] ?? $tipo['es'] ?? 'Sin tipo';
 
-                $loc = $prop->localidad->nombre;
-                $nombreLoc = $loc[$currentLocale] ?? $loc['es'] ?? 'Sin localidad';
+                    $loc = $prop->localidad->nombre;
+                    $nombreLoc = $loc[$currentLocale] ?? $loc['es'] ?? 'Sin localidad';
 
-                // Imagen temporal de relleno si no existe
-                $imagen = $prop->galerias->first()->url_imagen 
-                    ?? "https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=800";
+                    // Imagen temporal de relleno si no existe
+                    $imagen = $prop->galerias->first()->url_imagen 
+                        ?? "https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=800";
 
-                // Precio con moneda según idioma
-                $precioData = $prop->precio[$currentLocale] ?? $prop->precio['es'] ?? ['precio' => 0, 'moneda' => 'MXN'];
-                $precio = number_format($precioData['precio'], 2);
-                $moneda = $precioData['moneda'];
+                    // Precio con moneda según idioma
+                    $precioData = $prop->precio[$currentLocale] ?? $prop->precio['es'] ?? ['precio' => 0, 'moneda' => 'MXN'];
+                    $precio = number_format($precioData['precio'], 2);
+                    $moneda = $precioData['moneda'];
 
-                // Etiquetas simuladas
-                $tipoOperacion = $prop->tipoOperacion->nombre[$currentLocale] ?? $prop->tipoOperacion->nombre['es'] ?? 'Operación';
-                $tags = ['Destacado', 'Oportunidad'];
+                    // Etiquetas simuladas
+                    $tipoOperacion = $prop->tipoOperacion->nombre[$currentLocale] ?? $prop->tipoOperacion->nombre['es'] ?? 'Operación';
+                    $tags = ['Destacado', 'Oportunidad'];
             @endphp
 
-            <div class="bg-white rounded-lg shadow hover:shadow-lg transition overflow-hidden flex flex-col">
+            <div class="bg-white rounded-lg shadow hover:shadow-lg transition-all duration-300 overflow-hidden flex"
+                 :class="(view === 'grid' || mobile) ? 'flex-col' : 'flex-col md:flex-row h-auto md:h-72 w-full'">
 
                 {{-- Imagen --}}
-                <div class="relative h-64 w-full bg-gray-200 overflow-hidden">
+                <div class="relative bg-gray-200 overflow-hidden transition-all duration-300 flex-shrink-0"
+                     :class="(view === 'grid' || mobile) ? 'h-64 w-full' : 'h-64 md:h-full w-full md:w-80'">
                    @php
                         // Tipo de inmueble correcto
                         $tipoId = $prop->id_tipo_inmueble ?? null;
@@ -333,8 +377,8 @@
                         class="w-full h-full object-cover transform hover:scale-105 transition duration-300"
                     >
 
-                    {{-- PRECIO (bg 80%, texto bold italic negro) - Fallback con estilo inline --}}
-                    <div class="absolute bottom-0 left-0">
+                    {{-- PRECIO (en vista grid o en móvil siempre en la imagen) --}}
+                    <div class="absolute bottom-0 left-0" x-show="view === 'grid' || mobile">
                         <span style="background-color: rgba(255,255,255,0.8);"
                             class="text-black font-bold italic text-lg px-4 py-2 rounded-tr-md shadow">
                             ${{ $precio }} {{ $moneda }}
@@ -430,8 +474,16 @@
                     {{-- Separador --}}
                     <div class="w-full h-px bg-gray-200 mb-4"></div>
 
-                    {{-- Botones más grandes y menos redondeados --}}
-                    <div class="flex mt-auto space-x-3">
+                    {{-- Footer de la tarjeta: Precio (vista lista desktop) + Botones --}}
+                    <div class="flex mt-auto items-center justify-between gap-4">
+                        
+                        {{-- Precio solo visible en vista lista y NO en móvil --}}
+                        <div x-show="view === 'list' && !mobile" class="text-2xl font-extrabold text-[#052669] whitespace-nowrap">
+                            ${{ $precio }} <span class="text-sm font-semibold">{{ $moneda }}</span>
+                        </div>
+
+                        {{-- Contenedor de botones --}}
+                        <div class="flex space-x-3 w-full" :class="(view === 'list' && !mobile) ? 'md:w-auto' : ''">
 
                         {{-- Botón Ver más --}}
                         <a href="#"
@@ -452,13 +504,8 @@
 
                 </div>
 
-
-
-
-
-
-
             </div>
+        </div>
         @empty
             <div class="col-span-full text-center text-gray-500">
                 {{ $labels['labelNoResultadoPropiedades'] ?? 'No se encontraron propiedades.' }}

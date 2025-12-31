@@ -1,11 +1,11 @@
 <!-- Footer -->
-<footer class="relative text-white mt-16 ">
+<footer class="relative text-white mt-24 ">
 
     <!-- Newsletter (componente) -->
         <x-newsLetter />
 
     <!-- Sección Principal del Footer -->
-    <div class="bg-[#052669] pt-52 pb-12 mt-16 "> {{-- pt-52 crea espacio para el newsletter flotante --}}
+    <div class="bg-[#052669] pt-64 pb-12 mt-32 "> {{-- pt-64 crea más espacio para el newsletter flotante --}}
         <div class="container mx-auto px-4">
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                 <!-- Logo y marca -->
@@ -20,12 +20,17 @@
                 <div>
                     <h3 class="text-lg font-semibold mb-4">Mapa del sitio</h3>
                     <ul class="space-y-2">
-                        <li><a href="#" class="text-gray-300 hover:text-white transition">Propiedades</a></li>
-                        <li><a href="#" class="text-gray-300 hover:text-white transition">Desarrollos</a></li>
-                        <li><a href="#" class="text-gray-300 hover:text-white transition">BIOS</a></li>
-                        <li><a href="#" class="text-gray-300 hover:text-white transition">Alianzas / Partners</a></li>
-                        <li><a href="#" class="text-gray-300 hover:text-white transition">Nosotros</a></li>
-                        <li><a href="#" class="text-gray-300 hover:text-white transition">Contacto</a></li>
+                        @if(isset($menuItems))
+                            @foreach($menuItems as $item)
+                                <li>
+                                    <a href="{{ url($urlPrefix . $item->slug) }}" class="text-gray-300 hover:text-white transition">
+                                        {{ $item->title }}
+                                    </a>
+                                </li>
+                            @endforeach
+                        @else
+                            <li class="text-red-400 text-xs">Menu not loaded</li>
+                        @endif                    
                     </ul>
                 </div>
 
@@ -53,18 +58,26 @@
 
                     <!-- Redes sociales -->
                     <div class="flex space-x-3">
-                        <a href="#" class="p-3 bg-[#FF8A65] hover:bg-[#ff7043] rounded-lg transition" aria-label="Facebook">
+                        @if(!empty($siteSettings->facebook_url))
+                        <a href="{{ $siteSettings->facebook_url }}" class="p-3 bg-[#FF8A65] hover:bg-[#ff7043] rounded-lg transition" aria-label="Facebook">
                             <i class="fab fa-facebook-f text-white text-lg"></i>
                         </a>
-                        <a href="#" class="p-3 bg-[#FF8A65] hover:bg-[#ff7043] rounded-lg transition" aria-label="Instagram">
+                        @endif
+                        @if(!empty($siteSettings->instagram_url))
+                        <a href="{{ $siteSettings->instagram_url }}" class="p-3 bg-[#FF8A65] hover:bg-[#ff7043] rounded-lg transition" aria-label="Instagram">
                             <i class="fab fa-instagram text-white text-lg"></i>
                         </a>
-                        <a href="#" class="p-3 bg-[#FF8A65] hover:bg-[#ff7043] rounded-lg transition" aria-label="Twitter">
+                        @endif
+                        @if(!empty($siteSettings->twitter_url))
+                        <a href="{{ $siteSettings->twitter_url }}" class="p-3 bg-[#FF8A65] hover:bg-[#ff7043] rounded-lg transition" aria-label="Twitter">
                             <i class="fab fa-twitter text-white text-lg"></i>
                         </a>
-                        <a href="#" class="p-3 bg-[#FF8A65] hover:bg-[#ff7043] rounded-lg transition" aria-label="LinkedIn">
+                        @endif
+                        @if(!empty($siteSettings->linkedin_url))
+                        <a href="{{ $siteSettings->linkedin_url }}" class="p-3 bg-[#FF8A65] hover:bg-[#ff7043] rounded-lg transition" aria-label="LinkedIn">
                             <i class="fab fa-linkedin-in text-white text-lg"></i>
                         </a>
+                        @endif
                     </div>
                 </div>
             </div>

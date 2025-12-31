@@ -8,6 +8,7 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Blade;
 use App\Models\SiteSetting;
 use App\View\Components\ContactForm;
+use App\View\Components\Footer;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -33,6 +34,7 @@ class AppServiceProvider extends ServiceProvider
     {
         Schema::defaultStringLength(191);
         Blade::component('contact-form', ContactForm::class);
+        Blade::component('footer', Footer::class);
         // ✅ Esperar hasta que el framework haya inicializado la BD
         $this->app->booted(function () {
             // Verificar que la tabla exista antes de consultar

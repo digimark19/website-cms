@@ -384,7 +384,8 @@ class SectionsSeeder extends Seeder
                     "labelNiveles" => "Niveles",
                     "labelEstacionamientos" => "Estacionamientos",
                     "btnLabelMasInformacion" => "Ver más",
-                    "labelNoResultadoPropiedades" => "No se encontraron propiedades."
+                    "labelNoResultadoPropiedades" => "No se encontraron propiedades.",
+                    "labelPropiedadesEncontradas" => "propiedades encontradas"
                 ],
                 "en" => [
                     "inputLabelLocalidad" => "Location",
@@ -408,7 +409,8 @@ class SectionsSeeder extends Seeder
                     "labelNiveles" => "Levels",
                     "labelEstacionamientos" => "Parking spaces",
                     "btnLabelMasInformacion" => "Show more",
-                    "labelNoResultadoPropiedades" => "No properties found."
+                    "labelNoResultadoPropiedades" => "No properties found.",
+                    "labelPropiedadesEncontradas" => "properties found"
                 ]
             ]),
             'is_active' => true,
