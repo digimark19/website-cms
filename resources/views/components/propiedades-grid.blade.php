@@ -1,10 +1,10 @@
 <a id="listado"></a>
-<div class="container mx-auto py-10 px-4">
+<div class="container mx-auto py-4 px-4" x-data="{ loading: false }">
     <!-- 🔍 Formulario de filtros -->
-    <div x-data="{ advanced: @json(request()->has('advanced') ? true : false) }" class="bg-[#052669] rounded-lg p-6 mb-10 shadow-md">
+    <div x-data="{ advanced: @json(request()->has('advanced') ? true : false) }" class="bg-[#052669] rounded-lg p-4 mb-5 shadow-md relative">
 
         <!-- FORM PRINCIPAL -->
-        <form id="filtrosForm" method="GET" action="#listado" class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-5 gap-4 items-end">
+        <form id="filtrosForm" method="GET" action="{{ $action ?? '#listado' }}" @submit="loading = true" class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-5 gap-4 items-end">
 
             <!-- Localidad -->
             <div>
@@ -12,9 +12,9 @@
                     class="w-full bg-white border border-gray-300 rounded p-3 shadow-sm
                     placeholder-gray-500 focus:outline-none focus:ring-0
                     focus:border-transparent focus:shadow-[0_0_8px_rgba(255,138,101,0.6)]">
-                    <option value="">Localidad</option>
-                    @foreach($localidades as $loc)
-                        @php $nombre = json_decode($loc->nombre, true)['es'] ?? $loc->nombre; @endphp
+                    <option value="">{{ $labels["inputLabelLocalidad"] ?? 'Localidad' }}</option>
+                    @foreach($localidades as $loc)  
+                        @php $nombre = $loc->nombre['es'] ?? $loc->nombre['es']; @endphp
                         <option value="{{ $loc->id }}" {{ request('localidad') == $loc->id ? 'selected' : '' }}>
                             {{ $nombre }}
                         </option>
@@ -28,9 +28,9 @@
                     class="w-full bg-white border border-gray-300 rounded p-3 shadow-sm
                     placeholder-gray-500 focus:outline-none focus:ring-0 
                     focus:border-transparent focus:shadow-[0_0_8px_rgba(255,138,101,0.6)]">
-                    <option value="">Tipo de propiedad</option>
+                    <option value="">{{ $labels['inputLabelTipoPropiedad'] ?? 'Tipo de propiedad' }}</option>
                     @foreach($tiposInmueble as $tipo)
-                        @php $nombre = json_decode($tipo->nombre, true)['es'] ?? $tipo->nombre; @endphp
+                        @php $nombre = $tipo->nombre['es'] ?? $tipo->nombre['es']; @endphp
                         <option value="{{ $tipo->id }}" {{ request('tipo') == $tipo->id ? 'selected' : '' }}>
                             {{ $nombre }}
                         </option>
@@ -44,9 +44,9 @@
                     class="w-full bg-white border border-gray-300 rounded p-3 shadow-sm
                     placeholder-gray-500 focus:outline-none focus:ring-0 
                     focus:border-transparent focus:shadow-[0_0_8px_rgba(255,138,101,0.6)]">
-                    <option value="">Operación</option>
+                    <option value="">{{ $labels['inputLabelOperacion'] ?? 'Operación' }}</option>
                     @foreach($tiposOperacion as $op)
-                        @php $nombre = json_decode($op->nombre, true)['es'] ?? $op->nombre; @endphp
+                        @php $nombre = $op->nombre['es'] ?? $op->nombre['es']; @endphp
                         <option value="{{ $op->id }}" {{ request('operacion') == $op->id ? 'selected' : '' }}>
                             {{ $nombre }}
                         </option>
@@ -61,7 +61,7 @@
                     placeholder-gray-500 focus:outline-none focus:ring-0 
                     focus:border-transparent focus:shadow-[0_0_8px_rgba(255,138,101,0.6)]">
 
-                    <option value="">Rango de precio</option>
+                    <option value="">{{ $labels['inputLabelRangoPrecio'] ?? 'Rango de precio' }}</option>
 
                     @php
                         $rangos = [
@@ -89,10 +89,11 @@
                 <button type="submit"
                     class="w-full bg-[#FF8A65] hover:bg-[#ff7043] text-white 
                     p-3 rounded text-lg font-semibold shadow-md transition">
-                    Buscar
+                    {{ $labels['btnLabelBuscar'] ?? 'Buscar' }}
                 </button>
             </div>
 
+            @if($showResults)
             <!-- ===== Contenedor para link filtros avanzados (izq) + orden (derecha) ===== -->
             <!-- Ocupa toda la fila en lg: lo alineamos con justify-between -->
             <div class="col-span-2 md:col-span-2 lg:col-span-5 flex justify-between items-center mt-2">
@@ -101,7 +102,7 @@
                 <button type="button"
                     @click="advanced = !advanced; $nextTick(()=> { if(advanced) { history.replaceState(null, '', updateQueryStringParameter(window.location.href, 'advanced', '1')) } else { history.replaceState(null, '', updateQueryStringParameter(window.location.href, 'advanced', null)) } })"
                     class="text-white underline text-sm hover:text-[#FF8A65] transition">
-                    Filtros avanzados
+                    {{ $labels['labelFiltrosAvanzados'] ?? 'Filtros avanzados' }}
                 </button>
 
                 <!-- Ordenamiento (envía el form automáticamente) -->
@@ -110,10 +111,10 @@
                     class="bg-white border border-gray-300 rounded p-2 shadow-sm text-sm
                     focus:outline-none focus:ring-0 focus:border-transparent
                     focus:shadow-[0_0_8px_rgba(255,138,101,0.6)]">
-                    <option value="">Ordenar por</option>
-                    <option value="precio_asc"  {{ request('orden') == 'precio_asc' ? 'selected' : '' }}>Precio: menor a mayor</option>
-                    <option value="precio_desc" {{ request('orden') == 'precio_desc' ? 'selected' : '' }}>Precio: mayor a menor</option>
-                    <option value="recientes"   {{ request('orden') == 'recientes' ? 'selected' : '' }}>Más recientes</option>
+                    <option value="">{{ $labels['labelOrdenar'] ?? 'Ordenar por' }}</option>
+                    <option value="precio_asc"  {{ request('orden') == 'precio_asc' ? 'selected' : '' }}>{{ $labels['labelPriceMenorMayor'] ?? 'Precio: menor a mayor' }}</option>
+                    <option value="precio_desc" {{ request('orden') == 'precio_desc' ? 'selected' : '' }}>{{ $labels['labelPriceMayorMenor'] ?? 'Precio: mayor a menor' }}</option>
+                    <option value="recientes"   {{ request('orden') == 'recientes' ? 'selected' : '' }}>{{ $labels['labelMasReciente'] ?? 'Más recientes' }}</option>
                 </select>
             </div>
 
@@ -121,19 +122,19 @@
             <div x-show="advanced" x-transition class="col-span-2 md:col-span-2 lg:col-span-5 mt-4">
                 <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
 
-                    <input type="number" name="banos" placeholder="Baños"
+                    <input type="number" name="banos" placeholder="{{ $labels['labelBanos'] ?? 'Baños' }}"
                         value="{{ request('banos') }}"
                         class="w-full bg-white border border-gray-300 rounded p-3 shadow-sm
                         focus:outline-none focus:ring-0 focus:border-transparent
                         focus:shadow-[0_0_8px_rgba(255,138,101,0.6)]">
 
-                    <input type="number" name="construccion" placeholder="Construcción (m²)"
+                    <input type="number" name="construccion" placeholder="{{ $labels['labelConstruccion'] ?? 'Construcción (m²)' }}"
                         value="{{ request('construccion') }}"
                         class="w-full bg-white border border-gray-300 rounded p-3 shadow-sm
                         focus:outline-none focus:ring-0 focus:border-transparent
                         focus:shadow-[0_0_8px_rgba(255,138,101,0.6)]">
 
-                    <input type="number" name="terreno" placeholder="Terreno (m²)"
+                    <input type="number" name="terreno" placeholder="{{ $labels['labelTerreno'] ?? 'Terreno (m²)' }}"
                         value="{{ request('terreno') }}"
                         class="w-full bg-white border border-gray-300 rounded p-3 shadow-sm
                         focus:outline-none focus:ring-0 focus:border-transparent
@@ -143,7 +144,7 @@
                         class="w-full bg-white border border-gray-300 rounded p-3 shadow-sm
                         focus:outline-none focus:ring-0 focus:border-transparent
                         focus:shadow-[0_0_8px_rgba(255,138,101,0.6)]">
-                        <option value="">Estatus</option>
+                        <option value="">{{ $labels['labelEstatus'] ?? 'Estatus' }}</option>
                         <option value="nuevo" {{ request('estatus') == 'nuevo' ? 'selected' : '' }}>Nuevo</option>
                         <option value="remodelado" {{ request('estatus') == 'remodelado' ? 'selected' : '' }}>Remodelado</option>
                     </select>
@@ -151,8 +152,45 @@
                     <!-- agrega aquí más filtros avanzados si los necesitas -->
                 </div>
             </div>
+            @endif
 
         </form>
+
+        {{-- Loader overlay para homepage (pantalla completa) --}}
+        @if(!$showResults)
+        <div x-show="loading" 
+             x-transition:enter="transition ease-out duration-300"
+             x-transition:enter-start="opacity-0"
+             x-transition:enter-end="opacity-100"
+             class="fixed inset-0 bg-white/95 backdrop-blur-sm flex items-center justify-center z-50"
+             style="display: none;">
+            <div class="text-center">
+                {{-- Animated house icon --}}
+                <div class="relative w-24 h-24 mx-auto mb-6">
+                    <div class="absolute inset-0 animate-ping">
+                        <svg class="w-full h-full text-[#0AB3B6] opacity-75" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+                        </svg>
+                    </div>
+                    <div class="relative">
+                        <svg class="w-24 h-24 text-[#052669]" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+                        </svg>
+                    </div>
+                </div>
+                
+                {{-- Loading text --}}
+                <p class="text-xl font-semibold text-[#052669] mb-2">
+                    Buscando propiedades...
+                </p>
+                <div class="flex items-center justify-center space-x-1">
+                    <div class="w-2 h-2 bg-[#0AB3B6] rounded-full animate-bounce" style="animation-delay: 0ms"></div>
+                    <div class="w-2 h-2 bg-[#0AB3B6] rounded-full animate-bounce" style="animation-delay: 150ms"></div>
+                    <div class="w-2 h-2 bg-[#0AB3B6] rounded-full animate-bounce" style="animation-delay: 300ms"></div>
+                </div>
+            </div>
+        </div>
+        @endif
 
     </div>
 
@@ -192,24 +230,65 @@
 
 
 
+    @if($showResults)
     {{-- 🏡 Listado de propiedades estilo Blog --}}
-    <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+    <div>
+        {{-- Loader para página de resultados (reemplaza la zona de resultados) --}}
+        <div x-show="loading" 
+             x-transition:enter="transition ease-out duration-300"
+             x-transition:enter-start="opacity-0"
+             x-transition:enter-end="opacity-100"
+             class="bg-white/95 backdrop-blur-sm flex items-center justify-center min-h-[400px] rounded-lg"
+             style="display: none;">
+            <div class="text-center">
+                {{-- Animated house icon --}}
+                <div class="relative w-24 h-24 mx-auto mb-6">
+                    <div class="absolute inset-0 animate-ping">
+                        <svg class="w-full h-full text-[#0AB3B6] opacity-75" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+                        </svg>
+                    </div>
+                    <div class="relative">
+                        <svg class="w-24 h-24 text-[#052669]" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+                        </svg>
+                    </div>
+                </div>
+                
+                {{-- Loading text --}}
+                <p class="text-xl font-semibold text-[#052669] mb-2">
+                    {{ $labels['labelBuscandoPropiedad'] ?? 'Buscando propiedades...' }}
+                </p>
+                <div class="flex items-center justify-center space-x-1">
+                    <div class="w-2 h-2 bg-[#0AB3B6] rounded-full animate-bounce" style="animation-delay: 0ms"></div>
+                    <div class="w-2 h-2 bg-[#0AB3B6] rounded-full animate-bounce" style="animation-delay: 150ms"></div>
+                    <div class="w-2 h-2 bg-[#0AB3B6] rounded-full animate-bounce" style="animation-delay: 300ms"></div>
+                </div>
+            </div>
+        </div>
+
+        <div x-show="!loading" class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
         @forelse ($propiedades as $prop)
             @php
-                $tipo = json_decode($prop->tipoInmueble->nombre ?? '{}', true);
-                $nombreTipo = $tipo['es'] ?? 'Sin tipo';
+                $currentLocale = app()->getLocale();
+                
+                $tipo = $prop->tipoInmueble->nombre;
+                $nombreTipo = $tipo[$currentLocale] ?? $tipo['es'] ?? 'Sin tipo';
 
-                $loc = json_decode($prop->localidad->nombre ?? '{}', true);
-                $nombreLoc = $loc['es'] ?? 'Sin localidad';
+                $loc = $prop->localidad->nombre;
+                $nombreLoc = $loc[$currentLocale] ?? $loc['es'] ?? 'Sin localidad';
 
                 // Imagen temporal de relleno si no existe
                 $imagen = $prop->galerias->first()->url_imagen 
                     ?? "https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=800";
 
-                $precio = number_format($prop->precio, 2);
+                // Precio con moneda según idioma
+                $precioData = $prop->precio[$currentLocale] ?? $prop->precio['es'] ?? ['precio' => 0, 'moneda' => 'MXN'];
+                $precio = number_format($precioData['precio'], 2);
+                $moneda = $precioData['moneda'];
 
                 // Etiquetas simuladas
-                $categories = [$nombreTipo, $prop->tipoOperacion->nombre['es'] ?? 'Operación'];
+                $tipoOperacion = $prop->tipoOperacion->nombre[$currentLocale] ?? $prop->tipoOperacion->nombre['es'] ?? 'Operación';
                 $tags = ['Destacado', 'Oportunidad'];
             @endphp
 
@@ -258,18 +337,20 @@
                     <div class="absolute bottom-0 left-0">
                         <span style="background-color: rgba(255,255,255,0.8);"
                             class="text-black font-bold italic text-lg px-4 py-2 rounded-tr-md shadow">
-                            ${{ $precio }}
+                            ${{ $precio }} {{ $moneda }}
                         </span>
                     </div>
 
 
                     {{-- ETIQUETAS Y CATEGORÍAS (superior derecha) --}}
                     <div class="absolute top-2 right-2 flex flex-wrap gap-2 justify-end">
-                        @foreach($categories as $category)
-                            <span class="bg-blue-600 text-white px-2 py-1 text-xs rounded shadow">
-                                {{ $category }}
-                            </span>
-                        @endforeach
+                        
+                        <span class="bg-[#FF8A65] text-white px-2 py-1 text-xs rounded shadow">
+                            {{ $nombreTipo }}
+                        </span>
+                        <span class="bg-[#0AB3B6] text-white px-2 py-1 text-xs rounded shadow">
+                            {{ $tipoOperacion }}
+                        </span>
 
                         @foreach($tags as $tag)
                             <span class="bg-gray-300 text-gray-800 px-2 py-1 text-xs rounded shadow">
@@ -285,7 +366,7 @@
                     <div class="mb-3">
                         <h2 class="text-xl font-bold text-gray-900 leading-tight flex items-center gap-2">
                             <i class="fas fa-map-marker-alt text-[#0AB3B6] text-lg"></i>
-                            {{ $prop->nombre['es'] ?? $prop->nombre ?? 'Propiedad' }},
+                            {{ $prop->nombre[$currentLocale] ?? $prop->nombre ?? 'Propiedad' }},
                             <span class="text-gray-600 font-normal">{{ $nombreLoc }}</span>
                         </h2>
                     </div>
@@ -298,32 +379,32 @@
 
                         <div class="flex items-center gap-2">
                             <i class="fas fa-bed text-[#FF8A65]"></i>
-                            <span>{{ $prop->recamaras }} Recámaras</span>
+                            <span>{{ $prop->recamaras }} {{ $labels["labelRecamara"]}}</span>
                         </div>
 
                         <div class="flex items-center gap-2">
                             <i class="fas fa-bath text-[#FF8A65]"></i>
-                            <span>{{ $prop->banos }} Baños</span>
+                            <span>{{ $prop->banos }} {{ $labels["labelBanos"]}}</span>
                         </div>
 
                         <div class="flex items-center gap-2">
                             <i class="fas fa-ruler-combined text-[#FF8A65]"></i>
-                            <span>{{ $prop->metros_cuadrados ?? '—' }} m² construcción</span>
+                            <span>{{ $prop->metros_cuadrados ?? '—' }} m² {{ $labels["labelConstruccionlbl"] }}</span>
                         </div>
 
                         <div class="flex items-center gap-2">
                             <i class="fas fa-vector-square text-[#FF8A65]"></i>
-                            <span>{{ $prop->terreno ?? '—' }} m² terreno</span>
+                            <span>{{ $prop->terreno ?? '—' }} m² {{ $labels["labelTerreno"] }}</span>
                         </div>
 
                         <div class="flex items-center gap-2">
                             <i class="fas fa-car text-[#FF8A65]"></i>
-                            <span>{{ $prop->estacionamientos ?? '—' }} Estacionamientos</span>
+                            <span>{{ $prop->estacionamientos ?? '—' }} {{ $labels["labelEstacionamientos"] }}</span>
                         </div>
 
                         <div class="flex items-center gap-2">
                             <i class="fas fa-layer-group text-[#FF8A65]"></i>
-                            <span>{{ $prop->niveles ?? '—' }} Niveles</span>
+                            <span>{{ $prop->niveles ?? '—' }} {{ $labels["labelNiveles"] }}</span>
                         </div>
 
                     </div>
@@ -355,7 +436,7 @@
                         {{-- Botón Ver más --}}
                         <a href="#"
                         class="w-1/2 text-center bg-[#FF8A65] text-white px-5 py-3 rounded-md hover:bg-[#ff7043] transition font-semibold shadow">
-                        Mas información
+                        {{ $labels['btnLabelMasInformacion'] ?? 'Más información' }}
                         </a>
 
                         {{-- Botón WhatsApp (mismo color FF8A65) --}}
@@ -373,14 +454,14 @@
 
 
 
-        
+
 
 
 
             </div>
         @empty
             <div class="col-span-full text-center text-gray-500">
-                No se encontraron propiedades.
+                {{ $labels['labelNoResultadoPropiedades'] ?? 'No se encontraron propiedades.' }}
             </div>
         @endforelse
     </div>
@@ -388,7 +469,7 @@
 
 
     {{-- 📄 Paginación con más espacio (Diseño Actualizado) --}}
-    <div class="flex justify-center items-center space-x-2 mt-12 mb-24">
+    <div x-show="!loading" class="flex justify-center items-center space-x-2 mt-12 mb-24">
 
         {{-- Botón Anterior --}}
         @if ($propiedades->onFirstPage())
@@ -437,6 +518,8 @@
             </button>
         @endif
 
+        </div>
     </div>
+    @endif
 
 </div>

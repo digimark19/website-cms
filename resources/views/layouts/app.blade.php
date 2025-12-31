@@ -18,7 +18,7 @@
     <!-- <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script> -->
 
 </head>
-<body class="bg-gray-50 text-gray-900 h-dvh pt-20">
+<body class="bg-gray-50 text-gray-900 h-dvh pt-16 md:pt-[104px]">
 
     {{-- NAVBAR --}}
     <x-navbar />

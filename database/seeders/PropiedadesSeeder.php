@@ -72,7 +72,10 @@ class PropiedadesSeeder extends Seeder
                 'ubicacion'          => json_encode(['es' => "Ubicación $i", 'en' => "Location $i"]),
                 'latitud'            => rand(2000000, 2200000) / 100000,
                 'longitud'           => rand(-9000000, -8700000) / 100000,
-                'precio'             => $precio,
+                'precio'             => json_encode([
+                    'es' => ['precio' => $precio, 'moneda' => 'MXN'],
+                    'en' => ['precio' => round($precio / 20, 2), 'moneda' => 'USD']
+                ]),
                 'status'             => 'disponible',
                 'created_at'         => now(),
                 'updated_at'         => now(),

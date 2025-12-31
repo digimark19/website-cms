@@ -31,7 +31,8 @@ class DatabaseSeeder extends Seeder
             GaleriasSeeder::class,
             CaracteristicasSeeder::class,
             PropiedadCaracteristicaSeeder::class,
-            MenuItemsSeeder::class
+            MenuItemsSeeder::class,
+            PageSectionSeeder::class
         ]);
 
         User::factory()->create([

@@ -29,6 +29,7 @@ class Propiedad extends Model
         'nombre' => 'array',
         'descripcion' => 'array',
         'ubicacion' => 'array',
+        'precio' => 'array',
     ];
 
     // 🔗 Relaciones

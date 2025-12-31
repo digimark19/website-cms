@@ -1,30 +1,21 @@
-@props([
-    'image' => null,
-    'title' => 'Título por defecto',
-    'description' => 'Descripción por defecto',
-    'link' => null,
-    'link_text' => 'Ver más'
-])
 
-@php
-    // Si no hay imagen o el archivo no existe, usar fondo sólido
-    $background = (!empty($image) && file_exists(public_path($image)))
-        ? "background-image: url('$image');"
-        : "background-color: #101828;";
-@endphp
 
-<div class="hero bg-cover bg-center text-center text-white flex items-center justify-center"
-     style="{{ $background }} min-height: 580px; padding: 80px 20px;">
+<div class="relative w-full bg-cover bg-center flex flex-col justify-end pb-[8vh] min-h-[65vh]"
+     style="{{ $bgStyle }}">
     
-    <div class="bg-black/50 p-12 rounded-2xl inline-block max-w-3xl">
-        <h1 class="text-5xl font-bold mb-4">{{ $title }}</h1>
-        <p class="text-xl mb-6">{{ $description }}</p>
-
-        @if (!empty($link))
-            <a href="{{ $link }}"
-               class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-lg font-semibold inline-block text-lg">
-                {{ $link_text }}
-            </a>
+    <div class="relative z-10 w-full container mx-auto px-4 text-center">
+        {{-- Título --}}
+        @if($title)
+            <div class="px-4">
+                <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-[#052669] mb-2 drop-shadow-lg bg-white/50 backdrop-blur-sm px-6 py-2 rounded-xl inline-block">
+                    {{ $title }}
+                </h1>
+            </div>
         @endif
+
+        {{-- Buscador (PropiedadesGrid en modo solo búsqueda) --}}
+        <div class="w-full">
+            <x-propiedades-grid :show-results="false" :action="url(app()->getLocale() === 'es' ? 'buscar' : 'search')" />
+        </div>
     </div>
 </div>

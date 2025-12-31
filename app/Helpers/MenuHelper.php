@@ -2,68 +2,66 @@
 
 namespace App\Helpers;
 
-use App\Models\MenuItem;
+use App\Models\Menu;
+use App\Models\MenuTranslation; // Renamed model
 use Illuminate\Support\Facades\Cache;
-use App\Models\User;
+use Illuminate\Support\Facades\Route;
 
 class MenuHelper
 {
     public static function getMenu($menuCode, $locale)
     {
-        // Cacheamos el menú por 24 horas (o el tiempo que consideres adecuado)
         return Cache::remember("menu_{$menuCode}_{$locale}", 60 * 24, function () use ($menuCode, $locale) {
-            // Obtenemos los elementos del menú activo y ordenados, con sus traducciones filtradas
-            $items = MenuItem::with(['translations' => function ($query) use ($locale) {
-                    $query->where('locale_code', $locale);
-                }])
-                ->where('menu_code', $menuCode)
-                ->where('is_active', true)
+            // Find the menu by code
+            $menu = Menu::where('menu_code', $menuCode)->where('is_active', true)->first();
+
+            if (!$menu) {
+                return [];
+            }
+
+            // Fetch items (translations) for this menu and locale, starting with root items (parent_id null)
+            // We eager load children recursively using a custom query to filter by locale too? 
+            // Since structure is in the same table, we can just fetch ALL items for this menu & locale and build tree in PHP 
+            // OR use recursive relationship. 
+            // Building tree in PHP is often efficient enough for menus.
+
+            $allItems = MenuTranslation::where('menu_id', $menu->id)
+                ->where('locale_code', $locale)
                 ->orderBy('position')
                 ->get();
 
-            // Armamos la jerarquía (padres e hijos)
-            $menu = [];
+            return self::buildTree($allItems);
+        });
+    }
 
-            foreach ($items as $item) {
-                // Usamos la relación eager loaded
-                $translation = $item->translations->first();
-                if (!$translation) continue;
+    private static function buildTree($items, $parentId = null)
+    {
+        $branch = [];
 
-                $routeName = $translation->slug . '.' . $translation->locale_code;
+        foreach ($items as $item) {
+            if ($item->parent_id == $parentId) {
                 
-                if ($translation->slug === '#') {
+                $routeName = $item->slug . '.' . $item->locale_code;
+                
+                if ($item->slug === '#') {
                     $route = '#';
-                } elseif (\Illuminate\Support\Facades\Route::has($routeName)) {
+                } elseif (Route::has($routeName)) {
                     $route = route($routeName);
                 } else {
-                    // Si no es una ruta nombrada, asumimos que es una URL o path directo.
-                    // Podríamos usar url($translation->slug) si queremos que sea relativo a la raíz
-                    $route = url($translation->slug);
+                    $route = url($item->slug);
                 }
 
-                $menuData = [
+                $node = [
                     'id' => $item->id,
-                    'title' => $translation->title,
+                    'title' => $item->title,
                     'route' => $route,
-                    'children' => []
+                    'children' => self::buildTree($items, $item->id)
                 ];
 
-                if ($item->parent_id) {
-                    // Si el padre ya existe (porque se procesó antes o se creó por referencia), agregamos el hijo
-                    // Nota: Esto asume que los padres se procesan antes o que el array se maneja por referencia.
-                    // En la implementación original, si el padre no existía, se creaba implícitamente.
-                    // Si el padre llega DESPUÉS, sobrescribiría esto. Se asume orden correcto por 'position'.
-                    $menu[$item->parent_id]['children'][] = $menuData;
-                } else {
-                    // Si ya existía (por haber recibido hijos antes), preservamos los hijos
-                    if (isset($menu[$item->id]['children'])) {
-                        $menuData['children'] = $menu[$item->id]['children'];
-                    }
-                    $menu[$item->id] = $menuData;
-                }
+                $branch[] = $node;
             }
+        }
 
-            return array_values($menu);
-        });
+        return $branch;
     }
 }

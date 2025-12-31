@@ -10,7 +10,7 @@ class PagesSeeder extends Seeder
     public function run(): void
     {
         $pages = [
-            ['title' => 'Home', 'slug' => 'home', 'position' => 1, 'custom_view' => 'home'],
+            ['title' => 'Inicio', 'slug' => 'inicio', 'position' => 1, 'custom_view' => 'home'],
             ['title' => 'Propiedades', 'slug' => 'propiedades', 'position' => 2, 'custom_view' => 'propiedades'],
             ['title' => 'Desarrollos', 'slug' => '#', 'position' => 3, 'custom_view' => 'desarrollos'],
             ['title' => 'Quiero vender', 'slug' => 'quiero-vender', 'position' => 4, 'custom_view' => 'quierovender'],
@@ -21,6 +21,7 @@ class PagesSeeder extends Seeder
             // 🔥 NUEVAS PÁGINAS
             ['title' => 'Aviso de privacidad', 'slug' => 'aviso-de-privacidad', 'position' => 8, 'custom_view' => 'avisoPrivacidad'],
             ['title' => 'Términos y condiciones', 'slug' => 'terminos-y-condiciones', 'position' => 9, 'custom_view' => 'terminosCondiciones'],
+            ['title' => 'Buscar', 'slug' => 'buscar', 'position' => 10, 'custom_view' => 'buscar'],
         ];
 
         foreach ($pages as $page) {
@@ -35,7 +36,7 @@ class PagesSeeder extends Seeder
             ]);
 
             // Traducciones
-            $is_main = $page['slug'] === 'home' ? 1 : 0;
+            $is_main = $page['slug'] === 'inicio' || $page['slug'] === 'home' ? 1 : 0;
 
             DB::table('page_translations')->insert([
                 [
@@ -52,7 +53,7 @@ class PagesSeeder extends Seeder
                     'page_id' => $pageId,
                     'lang' => 'en',
                     'title' => match ($page['title']) {
-                        'Home' => 'Home',
+                        'Inicio' => 'Home',
                         'Desarrollos' => 'Developments',
                         'Propiedades' => 'Properties',
                         'Quiero vender' => 'Sell Your Property',
@@ -61,10 +62,11 @@ class PagesSeeder extends Seeder
                         'Contacto' => 'Contact',
                         'Aviso de privacidad' => 'Privacy Policy',
                         'Términos y condiciones' => 'Terms and Conditions',
+                        'Buscar' => 'Search',
                         default => $page['title'],
                     },
                     'slug' => match ($page['slug']) {
-                        'home' => 'home',
+                        'inicio' => 'home',
                         'desarrollos' => 'developments',
                         'propiedades' => 'properties',
                         'quiero-vender' => 'sell-your-property',
@@ -73,6 +75,7 @@ class PagesSeeder extends Seeder
                         'contacto' => 'contact',
                         'aviso-de-privacidad' => 'privacy-policy',
                         'terminos-y-condiciones' => 'terms-and-conditions',
+                        'buscar' => 'search',
                         default => $page['slug'],
                     },
                     'is_main' => $is_main,

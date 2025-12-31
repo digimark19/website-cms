@@ -14,7 +14,7 @@ class LocalesSeeder extends Seeder
                 'code' => 'es',
                 'name' => 'Español',
                 'native_name' => 'Español',
-                'url_prefix' => null, // sin prefijo
+                'url_prefix' => 'es', // sin prefijo
                 'is_default' => true,
                 'is_active' => true,
                 'created_at' => now(),

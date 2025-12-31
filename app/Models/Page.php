@@ -18,5 +18,12 @@ class Page extends Model
         $locale = $locale ?? app()->getLocale();
         return $this->translations()->where('lang', $locale)->first();
     }
+
+    public function sections()
+    {
+        return $this->belongsToMany(Section::class, 'page_section')
+                    ->withPivot('position', 'content')
+                    ->orderBy('pivot_position');
+    }
 }
 

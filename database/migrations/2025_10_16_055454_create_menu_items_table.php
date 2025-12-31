@@ -11,17 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('menu_items', function (Blueprint $table) {
+        Schema::create('menus', function (Blueprint $table) {
             $table->id();
             $table->string('menu_code');        // 'main', 'mobile', 'footer'
-            $table->foreignId('parent_id')->nullable()->constrained('menu_items')->nullOnDelete();
-            $table->integer('position')->default(0);
             $table->boolean('is_active')->default(true);
+            $table->timestamps();
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('menu_items');
+        Schema::dropIfExists('menus');
     }
 };

@@ -1,5 +1,5 @@
 {{-- 🔝 Barra superior (solo escritorio) --}}
-<div class="bg-white z-10 fixed w-full h-10 shadow-sm hidden md:block fixed top-0 left-0 ">
+<div class="bg-white z-20 fixed w-full h-10 shadow-sm hidden md:block fixed top-0 left-0 ">
   <div class="max-w-7xl mx-auto flex justify-between items-center h-10 px-4 sm:px-6 lg:px-8">
     {{-- 📧 Correo y teléfono --}}
     <div class="flex items-center space-x-6">
@@ -96,7 +96,7 @@
         </button>
 
         
-        {{-- Selector de Idioma Desktop --}}
+        <!-- {{-- Selector de Idioma Desktop --}}
         <div class="relative ml-2" x-data="{ openLang: false }" @click.away="openLang = false">
             <button @click="openLang = !openLang" class="text-white hover:text-gray-200 flex items-center gap-1 font-semibold focus:outline-none">
                 {{ strtoupper($currentLocale) }}
@@ -118,7 +118,7 @@
                     </a>
                 @endforeach
             </div>
-        </div>
+        </div> -->
 
       </div>
 
@@ -215,7 +215,7 @@
         </div>
       </div>
 
-      {{-- Idioma móvil --}}
+      <!-- {{-- Idioma móvil --}}
       <div x-data="{ openLangMobile: false }" class="pt-3 border-t border-[#0AB3B6]/20">
         <button @click="openLangMobile = !openLangMobile" 
                 class="flex justify-between w-full text-[#052669] font-semibold py-2">
@@ -232,7 +232,7 @@
             @endif
           @endforeach
         </div>
-      </div>
+      </div> -->
       
       
     </div>

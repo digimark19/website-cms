@@ -35,12 +35,15 @@ foreach ($languages as $lang) {
             foreach ($pages as $page) {
                 $translation = $page->translations->firstWhere('lang', $lang->code);
                 if (!$translation) continue;
+                $aaTest = $translation->slug;
                 // $ismain = $translation->is_main;
-                $uri = ($translation->is_main) ? "/" : $translation->slug;
+                if($translation->slug!='#' && $translation->slug!='' && $translation->slug!=null){
+                    $uri = ($translation->is_main==1) ? "/" : $translation->slug;
 
-                Route::get($uri, function () use ($translation) {
-                    return app(PageController::class)->show($translation->slug);
-                })->name($translation->slug . '.' . $lang->code);
+                    Route::get($uri, function () use ($translation) {
+                        return app(PageController::class)->show($translation->slug);
+                    })->name($translation->slug . '.' . $lang->code);
+                }
             }
 
             // --- Categorías del blog ---

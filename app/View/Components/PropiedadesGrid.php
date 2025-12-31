@@ -9,17 +9,18 @@ use App\Models\Localidad;
 use App\Models\TipoInmueble;
 use App\Models\TipoOperacion;
 use App\Models\Caracteristica;
+use App\Models\Section;
 
 class PropiedadesGrid extends Component
 {
-    public $propiedades;
-    public $localidades;
-    public $tiposInmueble;
-    public $tiposOperacion;
-    public $filters = [];
+    public $showResults;
+    public $action;
 
-    public function __construct()
+    public function __construct($showResults = true, $action = null)
     {
+        $this->showResults = $showResults;
+        $this->action = $action;
+
         // Capturar filtros
         $this->filters = [
             'localidad' => Request::get('localidad'),
@@ -34,6 +35,33 @@ class PropiedadesGrid extends Component
             'terreno' => Request::get('terreno'),
             'estatus' => Request::get('estatus'),
         ];
+
+        // Catálogos (siempre necesarios para el buscador)
+        $this->localidades = Localidad::all();
+        // $datares = $this->localidades->toArray();
+        $this->tiposInmueble = TipoInmueble::all();
+        // $datares2 = $this->tiposInmueble->toArray();
+        $this->tiposOperacion = TipoOperacion::all();
+        // $datares3 = $this->tiposOperacion->toArray();
+
+        // Cargar etiquetas de búsqueda desde la base de datos
+        $searchSection = Section::where('code', 'search')->where('is_active', true)->first();
+        $locale = app()->getLocale();
+        
+        if ($searchSection && $searchSection->content) {
+            $content = json_decode($searchSection->content, true);
+            $this->labels = $content[$locale] ?? $content['es'] ?? [];
+        } else {
+            // Fallback si no existe la sección
+            $this->labels = [];
+        }
+        $labelsTest = $this->labels;
+
+        // Si solo mostramos buscador, no ejecutamos la query principal
+        if (!$this->showResults) {
+            $this->propiedades = collect(); // Colección vacía para evitar errores
+            return;
+        }
 
         $query = Propiedad::with([
             'galerias', 'localidad', 'tipoInmueble', 'tipoOperacion', 'caracteristicas'
@@ -81,11 +109,6 @@ class PropiedadesGrid extends Component
 
         // Paginación
         $this->propiedades = $query->paginate(12)->appends(Request::query());
-
-        // Catálogos
-        $this->localidades = Localidad::all();
-        $this->tiposInmueble = TipoInmueble::all();
-        $this->tiposOperacion = TipoOperacion::all();
     }
 
     private function applyCaracteristicaFilter($query, $nombreCaracteristica, $filterKey)
@@ -105,6 +128,12 @@ class PropiedadesGrid extends Component
 
     public function render()
     {
-        return view('components.propiedades-grid');
+        return view('components.propiedades-grid',[
+            'localidades' => $this->localidades,
+            'tiposInmueble' => $this->tiposInmueble,
+            'tiposOperacion' => $this->tiposOperacion,
+            'propiedades' => $this->propiedades,
+            'labels' => $this->labels,
+        ]);
     }
 }
