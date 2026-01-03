@@ -1,70 +1,73 @@
-<section class="relative bg-gray-100 pb-[28rem] sm:pb-[26rem] md:pb-48 lg:pb-48 lg:pt-4 pt-[4rem] sm:pt-[4rem]">
-  <!-- Contenedor principal -->
-  <div class="max-w-7xl mx-auto px-4 text-center relative">
-    <!-- Título pequeño -->
-    <p class="text-sm text-[#0AB3B6] uppercase mb-2">{{ $content['titulo'] ?? '' }}</p>
-    
-    <!-- Título principal -->
-    <h2 class="text-2xl md:text-3xl font-medium text-gray-800 mb-8">
-      {{ $content['subtitulo'] ?? '' }}
-    </h2>
+<section class="relative bg-white pt-24 pb-32 overflow-hidden font-['Rubik']">
+  <!-- Decorative background elements -->
+  <div class="absolute top-0 left-0 w-64 h-64 bg-[#0AB3B6]/5 rounded-full -translate-x-1/2 -translate-y-1/2 blur-3xl"></div>
+  <div class="absolute bottom-0 right-0 w-96 h-96 bg-[#FF8A65]/5 rounded-full translate-x-1/2 translate-y-1/2 blur-3xl"></div>
 
-    <!-- Imagen central responsiva -->
-    <div class="relative mb-20">
-      <picture>
-        <!-- Imagen para pantallas grandes -->
-        <source srcset="https://img.freepik.com/foto-gratis/mujer-trabajando-remotamente-casa_23-2150192195.jpg?semt=ais_hybrid&w=740&q=80" media="(min-width: 1280px)">
-        <!-- Imagen para pantallas medianas -->
-        <source srcset="https://img.freepik.com/foto-gratis/mujer-trabajando-remotamente-casa_23-2150192195.jpg?semt=ais_hybrid&w=740&q=80" media="(min-width: 768px)">
-        <!-- Imagen por defecto (móvil) -->
-        <img 
-          src="https://img.freepik.com/foto-gratis/mujer-trabajando-remotamente-casa_23-2150192195.jpg?semt=ais_hybrid&w=740&q=80" 
-          alt="Trabajo en laptop"
-          class="w-full max-w-7xl mx-auto 
-                h-[260px] sm:h-[300px] md:h-[360px] lg:h-[420px]
-                object-cover rounded-2xl shadow-lg"
-        >
-      </picture>
+  <div class="max-w-7xl mx-auto px-4 relative">
+    
+    <!-- Section Header -->
+    <div class="text-center max-w-3xl mx-auto mb-16">
+      <span class="inline-block px-4 py-1.5 rounded-full bg-[#0AB3B6]/10 text-[#0AB3B6] text-xs font-bold uppercase tracking-widest mb-4">
+        {{ $content['titulo'] ?? 'Nuestros Servicios' }}
+      </span>
+      <h2 class="text-3xl md:text-5xl font-extrabold text-[#052669] leading-tight font-['Rubik']">
+        {{ $content['subtitulo'] ?? 'Lo que podemos hacer por ti' }}
+      </h2>
+      <div class="w-20 h-1.5 bg-[#FF8A65] mx-auto mt-6 rounded-full"></div>
     </div>
 
-    <!-- Tarjetas flotantes -->
-    @if(!empty($content['tarjetas']))
-    <div 
-      class="absolute left-1/2 bottom-0 transform -translate-x-1/2 
-             translate-y-[75%] sm:translate-y-[78%] md:translate-y-[80%] 
-             w-full px-6 md:px-10">
-      <div class="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-10 md:gap-y-12">
-        @foreach($content['tarjetas'] as $card)
-        <div class="relative bg-white rounded-2xl shadow-xl p-6 pt-12 pb-8 flex flex-col items-center text-center transition transform hover:-translate-y-2 duration-300 h-auto">
+    <!-- Main Content Area -->
+    <div class="relative">
+      {{-- Background Image - Temporarily disabled to test clean look
+      <div class="relative rounded-3xl overflow-hidden shadow-2xl mb-16 h-[200px] md:h-[350px] group">
+        <img 
+          src="https://images.unsplash.com/photo-1560520653-9e0e4c89eb11?q=80&w=1973&auto=format&fit=crop" 
+          alt="Modern Architecture"
+          class="w-full h-full object-cover opacity-60 grayscale-[30%] transition-transform duration-1000 group-hover:scale-105"
+        >
+        <div class="absolute inset-0 bg-gradient-to-b from-[#052669]/20 via-[#052669]/40 to-[#052669]/80"></div>
+      </div>
+      --}}
 
-          <!-- Ícono cuadrado sobresaliente -->
-          <div class="absolute -top-8 flex items-center justify-center w-16 h-16 bg-[#D9A494] rounded-xl shadow-md">
-            <i class="{{ $card['icono'] }} text-white text-2xl"></i>
+      <!-- Service Cards -->
+      @if(!empty($content['tarjetas']))
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-10 relative z-10 px-8 md:px-14 lg:px-20 mx-auto">
+        @foreach($content['tarjetas'] as $card)
+        <div class="group bg-white rounded-2xl p-10 shadow-[0_30px_60px_rgba(0,0,0,0.12)] border border-gray-50 transition-all duration-500 hover:-translate-y-4 hover:shadow-[0_50px_100px_rgba(0,0,0,0.18)] flex flex-col h-full ring-1 ring-black/5">
+          
+          <!-- Icon Container -->
+          <div class="w-20 h-20 bg-gradient-to-br from-[#0AB3B6] to-[#052669] rounded-2xl flex items-center justify-center mb-8 shadow-xl shadow-[#0AB3B6]/20 transform group-hover:rotate-6 transition-transform duration-300">
+            <i class="{{ $card['icono'] ?? 'fas fa-check' }} text-white text-3xl"></i>
           </div>
 
-          <!-- Contenido -->
-          <h3 class="font-semibold text-gray-800 mb-2 mt-4">{{ $card['titulo'] ?? '' }}</h3>
+          <!-- Card Content -->
+          <h3 class="text-2xl font-black text-[#052669] mb-4 group-hover:text-[#0AB3B6] transition-colors duration-300">
+            {{ $card['titulo'] ?? 'Servicio' }}
+          </h3>
           
-          <p class="text-gray-500 text-sm mb-3 line-clamp-4 overflow-hidden">
-            {{ $card['descripcion'] }}
+          <p class="text-gray-600 leading-relaxed text-lg mb-10 flex-grow">
+            {{ $card['descripcion'] ?? '' }}
           </p>
 
-          <!-- Link inferior -->
-          <a href="#" class="text-[#0AB3B6] font-medium text-sm hover:underline transition mt-2">
-            Ver más →
-          </a>
+          <!-- Action Link -->
+          <div class="mt-auto">
+            <a href="#" class="inline-flex items-center text-[#FF8A65] font-black text-sm tracking-widest group-hover:gap-4 transition-all duration-300 uppercase">
+              <span>Saber más</span>
+              <i class="fas fa-long-arrow-alt-right ml-2 text-base"></i>
+            </a>
+          </div>
+
         </div>
         @endforeach
       </div>
+      @endif
     </div>
-    @endif
+
   </div>
 </section>
 
-<!-- 
-| Dispositivo         | Tamaño recomendado | Relación de aspecto sugerida                         |
-| ------------------- | ------------------ | ---------------------------------------------------- |
-| 📱 Mobile           | **800 × 600 px**   | 4:3 (para que no se recorte el contenido importante) |
-| 💻 Desktop mediano  | **1600 × 700 px**  | 16:7 (amplia, cinematográfica)                       |
-| 🖥️ Pantalla grande | **1920 × 850 px**  | 21:9 (ideal para pantallas anchas y diseño heroico)  |
--->
+<!-- Include Rubik from Google Fonts if not already in layout -->
+@once
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+@endonce
+

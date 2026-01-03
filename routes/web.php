@@ -61,6 +61,10 @@ foreach ($languages as $lang) {
                 return app(\App\Http\Controllers\BlogController::class)->show($slug);
             })->name('blog.post'); // nombre genérico
 
+            // --- Detalles de Propiedad ---
+            Route::get('propiedad/{slug}', [\App\Http\Controllers\PropiedadController::class, 'show'])->name('propiedades.show');
+            Route::get('propiedad/{slug}/pdf', [\App\Http\Controllers\PropiedadController::class, 'downloadPdf'])->name('propiedades.pdf');
+
         });
 }
 

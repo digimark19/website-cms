@@ -17,6 +17,7 @@ class Propiedad extends Model
         'id_tipo_inmueble',
         'id_tipo_operacion',
         'nombre',
+        'slug',
         'descripcion',
         'ubicacion',
         'latitud',

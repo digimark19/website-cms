@@ -1,61 +1,76 @@
 <!-- Sección Testimonios -->
-<section class="py-16 bg-gray-50">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <!-- Encabezado -->
-        <div class="text-center mb-12">
-            @if(!empty($content['titulo']))
-                <h2 class="text-3xl font-bold text-gray-800 mb-4">{{$content['titulo']}}</h2>
-            @endif
+<section class="pt-24 pb-48 bg-white relative overflow-hidden font-['Rubik']">
+    <!-- Decorative background elements -->
+    <div class="absolute top-0 right-0 w-96 h-96 bg-[#0AB3B6]/5 rounded-full translate-x-1/2 -translate-y-1/2 blur-3xl"></div>
+    <div class="absolute bottom-0 left-0 w-64 h-64 bg-[#FF8A65]/5 rounded-full -translate-x-1/2 translate-y-1/2 blur-3xl"></div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+        <!-- Section Header (Consistent with Servicios/Cintillo) -->
+        <div class="text-center max-w-3xl mx-auto mb-20">
+            <span class="inline-block px-4 py-1.5 rounded-full bg-[#0AB3B6]/10 text-[#0AB3B6] text-xs font-bold uppercase tracking-widest mb-4">
+                {{ $content['titulo_pequeno'] ?? 'Testimonios' }}
+            </span>
+            <h2 class="text-3xl md:text-5xl font-extrabold text-[#052669] leading-tight font-['Rubik']">
+                {{ $content['titulo'] ?? 'Lo que dicen nuestros clientes' }}
+            </h2>
+            <div class="w-20 h-1.5 bg-[#FF8A65] mx-auto mt-6 rounded-full"></div>
             @if(!empty($content['subtitulo']))
-                <p class="text-lg text-gray-600 max-w-2xl mx-auto">{{$content['subtitulo']}}</p>
+                <p class="text-lg text-gray-500 mt-8 max-w-2xl mx-auto leading-relaxed">{{$content['subtitulo']}}</p>
             @endif
         </div>
 
         @if(!empty($content['testimonials']))
         <!-- Grid de Testimonios -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 md:gap-12 mb-32 relative sm:gap-y-40">
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-8 gap-y-32">
             @foreach($content['testimonials'] as $card)
-            <div class="relative bg-white p-6 sm:p-8 md:pt-12 pt-8 flex flex-col justify-between mb-20 sm:mb-0"
-                 style="border-radius: 64px 64px 0 64px; box-shadow: 0 8px 30px #F3F3F3;">
+            <div class="relative bg-white p-8 md:p-10 rounded-[40px] shadow-[0_20px_50px_rgba(0,0,0,0.05)] border border-gray-50 flex flex-col items-center transition-all duration-500 hover:shadow-[0_30px_70px_rgba(0,0,0,0.1)] group">
 
-                <!-- Marca de agua de comillas (FontAwesome) grande, rotada y transparente -->
-                <i class="fas fa-quote-left absolute right-0 top-1/2 transform -translate-y-1/2 rotate-180 text-black text-[14rem]" style="z-index:0; opacity:0.03;"></i>
-
-                <!-- Número en círculo -->
-                <div class="absolute -top-6 sm:-top-8 left-1/2 transform -translate-x-1/2 w-9 sm:w-10 h-9 sm:h-10 flex items-center justify-center rounded-full z-10"
-                    style="background: linear-gradient(135deg, #FF8A65, #FF5A5F);">
-                    <i class="fas fa-quote-left absolute text-black opacity-20 text-2xl sm:text-3xl transform rotate-180"></i>
-                    <span class="text-white font-bold text-2xl sm:text-3xl relative z-10">{{ $loop->iteration }}</span>
+                <!-- Quote Icon (Centered) -->
+                <div class="absolute -top-6 left-1/2 transform -translate-x-1/2 w-12 h-12 bg-gradient-to-br from-[#FF8A65] to-[#FF5A5F] rounded-2xl flex items-center justify-center shadow-lg shadow-[#FF8A65]/30 transform group-hover:scale-110 group-hover:rotate-6 transition-transform duration-300">
+                    <i class="fas fa-quote-left text-white text-xl"></i>
                 </div>
 
                 <!-- Descripción -->
-                <p class="text-gray-700 mb-16 line-clamp-4">
-                    {{ $card['descripcion'] }}
-                </p>
+                <div class="relative z-10 flex-grow pt-4 pb-16">
+                    <p class="text-gray-600 italic leading-normal text-lg text-center font-light italic">
+                        "{{ $card['descripcion'] }}"
+                    </p>
+                </div>
 
-                <!-- Avatar con fondo blanco reducido, línea punteada y avatar encima -->
-                <div class="absolute -bottom-14 sm:-bottom-16 left-1/2 transform -translate-x-1/2">
-                    <div class="relative flex items-center justify-center w-36 h-36">
-                        <div class="absolute w-32 h-32 bg-white rounded-full z-10"
-                             style="box-shadow: 0 4px 16px 4px rgba(193,193,193,0.25);"></div>
-                        <div class="absolute w-28 h-28 rounded-full border-2 border-dashed flex items-center justify-center"
-                             style="border-color: #FF8A65; z-index:20;"></div>
-                        <div class="relative w-20 h-20 rounded-full overflow-hidden z-30">
+                <!-- Author Section (Avatar + Name Below) -->
+                <div class="absolute -bottom-24 left-1/2 transform -translate-x-1/2 flex flex-col items-center w-full">
+                    <!-- Avatar Structure -->
+                    <div class="relative w-28 h-28 mb-4">
+                        <!-- Decorative Ring -->
+                        <div class="absolute inset-0 rounded-full border-2 border-dashed border-[#FF8A65] animate-[spin_20s_linear_infinite] opacity-40"></div>
+                        <!-- White background circle -->
+                        <div class="absolute inset-2 bg-white rounded-full shadow-lg z-10"></div>
+                        <!-- Real Image -->
+                        <div class="absolute inset-3 rounded-full overflow-hidden z-20 border-4 border-white shadow-inner">
                             @if(!empty($card['avatar']))
-                                <img src="{{ $card['avatar'] }}" alt="{{ $card['name'] }}" class="w-full h-full rounded-full object-cover shadow-md">
+                                <img src="{{ $card['avatar'] }}" alt="{{ $card['name'] }}" class="w-full h-full object-cover">
                             @else
-                                <div class="w-full h-full rounded-full bg-gray-200 flex items-center justify-center text-gray-500 text-3xl sm:text-4xl shadow-md">
+                                <div class="w-full h-full bg-gray-100 flex items-center justify-center text-[#FF8A65] text-3xl">
                                     <i class="fas fa-user"></i>
                                 </div>
                             @endif
                         </div>
                     </div>
-                </div>
 
-                <!-- Nombre del autor -->
-                <h4 class="absolute -bottom-6 sm:-bottom-8 left-1/2 transform -translate-x-1/2 text-center font-semibold text-gray-800 text-base sm:text-lg">
-                    {{ $card['name'] }}
-                </h4>
+                    <!-- Name and Title -->
+                    <div class="text-center">
+                        <h4 class="font-bold text-[#052669] text-xl mb-1 tracking-tight">
+                            {{ $card['name'] }}
+                        </h4>
+                        <div class="flex justify-center gap-1 text-[#FF8A65]">
+                            <i class="fas fa-star text-[10px]"></i>
+                            <i class="fas fa-star text-[10px]"></i>
+                            <i class="fas fa-star text-[10px]"></i>
+                            <i class="fas fa-star text-[10px]"></i>
+                            <i class="fas fa-star text-[10px]"></i>
+                        </div>
+                    </div>
+                </div>
 
             </div>
             @endforeach
@@ -63,3 +78,7 @@
         @endif
     </div>
 </section>
+
+@once
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+@endonce

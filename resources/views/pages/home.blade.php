@@ -18,6 +18,8 @@
     <!-- TESTIMONIOS -->
     <x-testimonios />
 
+    <x-recent-properties />
+
     <!-- ALIANZAS COMERCIALES -->
     <x-cintillo />
 

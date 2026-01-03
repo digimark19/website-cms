@@ -4,6 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\PageTranslation;
+use App\Models\Propiedad;
+use App\Models\Localidad;
+use App\Models\TipoInmueble;
+use App\Models\TipoOperacion;
 
 class PageController extends Controller
 {
@@ -23,8 +27,11 @@ class PageController extends Controller
         $view = $pageTranslation->page->custom_view ?? 'showPage';
         $view = 'pages.'.$view;
 
-        return view($view, [
+        $data = [
             'page' => $pageTranslation,
-        ]);
+        ];
+
+
+        return view($view, $data);
     }
 }

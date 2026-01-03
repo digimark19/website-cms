@@ -7,6 +7,7 @@ use App\Models\Localidad;
 use App\Models\TipoInmueble;
 use App\Models\TipoOperacion;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class PropiedadController extends Controller
 {
@@ -82,5 +83,35 @@ class PropiedadController extends Controller
             'tiposInmueble',
             'tiposOperacion'
         ));
+    }
+
+    public function show($slug)
+    {
+        $propiedad = Propiedad::with(['galerias', 'localidad', 'tipoInmueble', 'tipoOperacion', 'amenidades', 'caracteristicas'])
+            ->where('slug', $slug)
+            ->firstOrFail();
+        $propiedadtest = $propiedad->toArray();
+        // dd($propiedadtest);
+
+        // Propiedades relacionadas (misma categoría, excluyendo la actual)
+        $relacionadas = Propiedad::with(['galerias', 'localidad', 'tipoInmueble'])
+            ->where('id_tipo_inmueble', $propiedad->id_tipo_inmueble)
+            ->where('id', '!=', $propiedad->id)
+            ->take(3)
+            ->get();
+
+        return view('pages.propiedad-detalle', compact('propiedad', 'relacionadas'));
+    }
+
+    public function downloadPdf($slug)
+    {
+        $propiedad = Propiedad::with(['galerias', 'localidad', 'tipoInmueble', 'tipoOperacion', 'amenidades', 'caracteristicas'])
+            ->where('slug', $slug)
+            ->firstOrFail();
+        $propiedadData = $propiedad->toArray();
+        $pdf = Pdf::loadView('pages.propiedad-pdf', compact('propiedad'))
+            ->setPaper('a4', 'portrait');
+
+        return $pdf->download("Ficha-Tecnica-{$slug}.pdf");
     }
 }

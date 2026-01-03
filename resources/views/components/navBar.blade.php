@@ -48,7 +48,9 @@
 </div>
 
 {{-- Navbar principal --}}
-<nav x-data="{ open: false, openQuote: false, openLang: false, activeDesktopMenu: null }" class="bg-[#0AB3B6] fixed w-full z-20 top-0 md:top-10 shadow-md">
+<nav x-data="{ open: false, openQuote: false, openLang: false, activeDesktopMenu: null }" 
+     @open-quote.window="openQuote = true"
+     class="bg-[#0AB3B6] fixed w-full z-20 top-0 md:top-10 shadow-md">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="flex justify-between h-16 items-center">
       {{-- Logo --}}
