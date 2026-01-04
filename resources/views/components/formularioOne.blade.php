@@ -1,4 +1,6 @@
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 relative">
+@props(['tipo' => 'contacto'])
+
+<div id="formulario" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 relative" style="scroll-margin-top: 120px;">
     <div class="flex flex-col lg:flex-row items-center relative lg:min-h-[850px]">
         
         {{-- Element 1: Background Image & Text --}}
@@ -35,7 +37,7 @@
                     lg:absolute lg:right-0 lg:top-1/2 lg:-translate-y-1/2 lg:z-10 
                     transform lg:-translate-x-[20px] relative z-20">
             <div class="text-white">
-                <x-contact-form tipo="contacto" />
+                <x-contact-form :tipo="$tipo" />
             </div>
         </div>
 

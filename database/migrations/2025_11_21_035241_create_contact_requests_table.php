@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string('ciudad');
             $table->text('mensaje');
             $table->string('tipo');
+            $table->string('url')->nullable();
 
             $table->string('ip')->nullable();
             $table->string('user_agent')->nullable();

@@ -1,11 +1,12 @@
 @props(['tipo' => ''])
+@if($content)
 @php
     $uid = uniqid('form_'); // ID único para evitar conflictos
 @endphp
 
 <div class="max-w-3xl mx-auto font-rubik">
     <p class="text-gray-700 mb-6">
-        Déjanos tu información y en breve nos pondremos en contacto contigo.
+        {{ $content['description'] }}
     </p>
 
     <!-- MENSAJE -->
@@ -15,31 +16,32 @@
 
         <!-- Input Hidden -->
         <input type="hidden" name="tipo" id="tipo-{{ $uid }}" value="{{ $tipo }}">
+        <input type="hidden" name="url" value="{{ url()->current() }}">
 
         <!-- GRID 2 COLUMNAS -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 
             <!-- Nombre -->
             <div>
-                <label class="label-required">Nombre <span>*</span></label>
+                <label class="label-required">{{ $content['label_nombre'] }} <span>*</span></label>
                 <input type="text" name="nombre" class="input-modern required-field">
             </div>
 
             <!-- Apellido -->
             <div>
-                <label class="label-required">Apellido <span>*</span></label>
+                <label class="label-required">{{ $content['label_apellido'] }} <span>*</span></label>
                 <input type="text" name="apellido" class="input-modern required-field">
             </div>
 
             <!-- Correo -->
             <div>
-                <label class="label-required">Correo <span>*</span></label>
+                <label class="label-required">{{ $content['label_correo'] }} <span>*</span></label>
                 <input type="email" name="correo" class="input-modern required-field">
             </div>
 
             <!-- Ciudad -->
             <div>
-                <label class="label-required">Ciudad <span>*</span></label>
+                <label class="label-required">{{ $content['label_ciudad'] }} <span>*</span></label>
                 <input type="text" name="ciudad" class="input-modern required-field">
             </div>
         </div>
@@ -59,7 +61,7 @@
                 { code: '+51', flag: '🇵🇪', name: 'Perú' }
             ]
         }">
-            <label class="label-required">Teléfono <span>*</span></label>
+            <label class="label-required">{{ $content['label_telefono'] }} <span>*</span></label>
             <div class="flex gap-2 relative">
                 {{-- Hidden input for the form --}}
                 <input type="hidden" name="lada" :value="selectedLada">
@@ -99,14 +101,14 @@
 
                 {{-- Phone Container --}}
                 <div class="flex-1">
-                    <input type="text" name="telefono" class="input-modern required-field" placeholder="Número">
+                    <input type="text" name="telefono" class="input-modern required-field" placeholder="{{ $content['placeholder_telefono'] }}">
                 </div>
             </div>
         </div>
 
         <!-- TEXAREA FULL WIDTH -->
         <div>
-            <label class="label-required">Mensaje <span>*</span></label>
+            <label class="label-required">{{ $content['label_mensaje'] }} <span>*</span></label>
             <textarea name="mensaje" rows="4" class="input-modern required-field"></textarea>
         </div>
 
@@ -125,14 +127,14 @@
             @endphp
             <input type="checkbox" id="terminos-{{ $uid }}" class="mt-1">
             <label for="terminos-{{ $uid }}" class="text-sm text-gray-700">
-                Acepto los <a href="{{ $urlTerminos }}" class="text-blue-600 hover:underline">términos y condiciones</a> y el <a href="{{ $urlPrivacidad }}" class="text-blue-600 hover:underline">aviso de privacidad</a> <span class="text-red-500">*</span>
+                {{ $content['label_terminos'] }} <span class="text-red-500">*</span>
             </label>
         </div>
 
         <!-- BOTÓN -->
         <button type="submit"
             class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-medium transition">
-            Enviar
+            {{ $content['btn_send'] }}
         </button>
     </form>
 </div>
@@ -222,17 +224,17 @@
         });
 
         if (!terminos.checked) {
-            mostrarMensaje("Debes aceptar los términos y condiciones.", "error");
+            mostrarMensaje("{{ $content['msg_error_terms'] }}", "error");
             valido = false;
         }
 
         if (!valido) {
-            mostrarMensaje("Por favor completa todos los campos obligatorios.", "error");
+            mostrarMensaje("{{ $content['msg_error_fields'] }}", "error");
             return;
         }
 
         submitBtn.disabled = true;
-        submitBtn.textContent = "Enviando...";
+        submitBtn.textContent = "{{ $content['msg_sending'] }}";
 
         const formData = new FormData(form);
 
@@ -253,7 +255,7 @@
             const data = await res.json();
 
             if (res.ok && data.success) {
-                mostrarMensaje("Formulario enviado correctamente.", "success");
+                mostrarMensaje("{{ $content['msg_success'] }}", "success");
                 form.reset();
             } else {
                 let errorMsg = data.message || "Hubo un error al enviar el formulario.";
@@ -264,14 +266,15 @@
             }
         } catch (error) {
             console.log(error)
-            mostrarMensaje("Error de conexión. Intenta nuevamente.", "error");
+            mostrarMensaje("{{ $content['msg_error_server'] }}", "error");
         } finally {
             // Re-habilitar campos
             allFields.forEach(f => f.disabled = false);
             submitBtn.disabled = false;
-            submitBtn.textContent = "Enviar";
+            submitBtn.textContent = "{{ $content['btn_send'] }}";
         }
     });
 
 })();
 </script>
+@endif

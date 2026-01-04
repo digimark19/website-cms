@@ -5,9 +5,9 @@
 @section('content')
 <div>
     
-    <x-hero />
+    <!-- Hero removed for modern cleaner look -->
     <!-- Be present above all else. - Naval Ravikant -->
-    <x-formularioOne />
+    <x-contact-section />
     
     <x-mapa />
 

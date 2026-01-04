@@ -18,6 +18,7 @@ class ContactForm extends Model
         'ciudad',
         'mensaje',
         'tipo',
+        'url',
         'ip',
         'user_agent'
     ];

@@ -12,7 +12,7 @@
     <!-- ALIANZAS COMERCIALES -->
     <x-cintillo />
 
-    <x-formularioOne />
+    <x-formularioOne tipo="contacto"/>
 
 
 </div>

@@ -26,8 +26,10 @@ class SiteSetting extends Model
         'latitude',
         'longitude',
         'theme_color',
-        'schedule', // horario en formato JSON o texto
-        'language', // opcional si manejas multilenguaje
+        'schedule',
+        'language',
+        'notification_email',
+        'notification_cc',
     ];
 
     // Si no usas timestamps en la tabla (created_at, updated_at)

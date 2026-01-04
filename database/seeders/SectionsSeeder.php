@@ -25,8 +25,43 @@ class SectionsSeeder extends Seeder
             [
                 'code' => 'contact_form',
                 'name' => 'Formulario de contacto',
-                'is_global' => false,
-                'content' => null,
+                'is_global' => true,
+                'content' => json_encode([
+                    "es" => [
+                        "description" => "Déjanos tu información y en breve nos pondremos en contacto contigo.",
+                        "label_nombre" => "Nombre",
+                        "label_apellido" => "Apellido",
+                        "label_correo" => "Correo",
+                        "label_ciudad" => "Ciudad",
+                        "label_telefono" => "Teléfono",
+                        "placeholder_telefono" => "Número",
+                        "label_mensaje" => "Mensaje",
+                        "label_terminos" => "Acepto los términos y condiciones y el aviso de privacidad",
+                        "btn_send" => "Enviar",
+                        "msg_sending" => "Enviando...",
+                        "msg_success" => "Formulario enviado correctamente.",
+                        "msg_error_fields" => "Por favor completa todos los campos obligatorios.",
+                        "msg_error_terms" => "Debes aceptar los términos y condiciones.",
+                        "msg_error_server" => "Error de conexión. Intenta nuevamente."
+                    ],
+                    "en" => [
+                        "description" => "Leave us your information and we will contact you shortly.",
+                        "label_nombre" => "First Name",
+                        "label_apellido" => "Last Name",
+                        "label_correo" => "Email",
+                        "label_ciudad" => "City",
+                        "label_telefono" => "Phone",
+                        "placeholder_telefono" => "Number",
+                        "label_mensaje" => "Message",
+                        "label_terminos" => "I accept the terms and conditions and the privacy policy",
+                        "btn_send" => "Send",
+                        "msg_sending" => "Sending...",
+                        "msg_success" => "Form submitted successfully.",
+                        "msg_error_fields" => "Please complete all required fields.",
+                        "msg_error_terms" => "You must accept the terms and conditions.",
+                        "msg_error_server" => "Connection error. Please try again."
+                    ]
+                ]),
                 'is_active' => true,
                 'created_at' => $now,
                 'updated_at' => $now,
@@ -250,15 +285,15 @@ class SectionsSeeder extends Seeder
 
                         "col1_imagen" => "https://ejemplo.com/imagen1.jpg",
                         "col1_numero" => "1",
-                        "col1_titulo" => "Initial Analysis",
+                        "col1_titulo" => "Precision Market Valuation",
 
                         "col2_imagen" => "https://ejemplo.com/imagen2.jpg",
                         "col2_numero" => "2",
-                        "col2_titulo" => "Strategy Design",
+                        "col2_titulo" => "Massive Digital Strategy",
 
                         "col3_imagen" => "https://ejemplo.com/imagen3.jpg",
                         "col3_numero" => "3",
-                        "col3_titulo" => "Implementation",
+                        "col3_titulo" => "Secure & Notarized Closing",
                     ],
                     "es" => [
                         "titulo" => "Nuestro Proceso",
@@ -266,15 +301,15 @@ class SectionsSeeder extends Seeder
 
                         "col1_imagen" => "https://ejemplo.com/imagen1.jpg",
                         "col1_numero" => "1",
-                        "col1_titulo" => "Análisis Inicial",
+                        "col1_titulo" => "Valoración de Mercado Precisa",
 
                         "col2_imagen" => "https://ejemplo.com/imagen2.jpg",
                         "col2_numero" => "2",
-                        "col2_titulo" => "Diseño de Estrategia",
+                        "col2_titulo" => "Marketing Digital Masivo",
 
                         "col3_imagen" => "https://ejemplo.com/imagen3.jpg",
                         "col3_numero" => "3",
-                        "col3_titulo" => "Implementación",
+                        "col3_titulo" => "Cierre Seguro ante Notario",
                     ],
                 ]),
                 'is_active' => true,
@@ -309,14 +344,14 @@ class SectionsSeeder extends Seeder
                     "en" => [
                         "image" => "/uploads/hero3.jpg",
                         "title" => "<span style=\"color:#777\">Hello, I’m </span><span style=\"color:#0AB3B6;font-weight:700\">Rachel Zamudio</span>",
-                        "button_link" => "/about-me",
+                        "button_link" => "#sobre-mi-seccion",
                         "button_text" => "Read more about me",
                         "description" => "I am a content creator, designer, and passionate about connecting with people through visual and narrative experiences."
                     ],
                     "es" => [
                         "image" => "/uploads/hero3.jpg",
                         "title" => "<span style=\"color:#777\">Hola, soy </span><span style=\"color:#0AB3B6;font-weight:700\">Rachel Zamudio</span>",
-                        "button_link" => "/sobre-mi",
+                        "button_link" => "#sobre-mi-seccion",
                         "button_text" => "Mostrar más sobre mí",
                         "description" => "Soy creadora de contenido, diseñadora y apasionada por conectar con las personas mediante experiencias visuales y narrativas envolventes."
                     ],
@@ -416,13 +451,60 @@ class SectionsSeeder extends Seeder
             'is_active' => true,
             'created_at' => $now,
             'updated_at' => $now,
-        ]
-
-
-
-
-
-
+        ],
+            [
+                'code' => 'hero_vender',
+                'name' => 'Vender',
+                'is_global' => true,
+                'content' => json_encode([
+                    "image" => "/images/hero-vender.jpg",
+                    "es" => [
+                        "title" => "Vende tu propiedad con nosotros",
+                        "subtitle" => "Confianza y rapidez en cada paso",
+                        "buttonText" => "Quiero Vender"
+                    ],
+                    "en" => [
+                        "title" => "Sell your property with us",
+                        "subtitle" => "Trust and speed in every step",
+                        "buttonText" => "I Want to Sell"
+                    ]
+                ]),
+                'is_active' => true,
+                'created_at' => $now,
+                'updated_at' => $now,
+            ],
+            [
+                'code' => 'form_section',
+                'name' => 'Formulario Info Contacto',
+                'is_global' => true,
+                'content' => json_encode([
+                    "es" => [
+                        "title" => "Información de contacto",
+                        "description" => "Estamos aquí para ayudarte. Contáctanos por cualquiera de estos medios y un experto te atenderá a la brevedad.",
+                        "whatsapp_label" => "WhatsApp",
+                        "whatsapp_cta" => "Clic para chatear al instante",
+                        "phone_label" => "Llámanos",
+                        "email_label" => "Escríbenos",
+                        "address_label" => "Visítanos",
+                        "social_label" => "Síguenos en redes",
+                        "form_title" => "Envíanos un mensaje"
+                    ],
+                    "en" => [
+                        "title" => "Contact Information",
+                        "description" => "We are here to help. Contact us by any of these means and an expert will assist you shortly.",
+                        "whatsapp_label" => "WhatsApp",
+                        "whatsapp_cta" => "Click to chat instantly",
+                        "phone_label" => "Call Us",
+                        "email_label" => "Write Us",
+                        "address_label" => "Visit Us",
+                        "social_label" => "Follow us",
+                        "form_title" => "Send us a message"
+                    ]
+                ]),
+                'is_active' => true,
+                'created_at' => $now,
+                'updated_at' => $now,
+            ]
         ];
 
         DB::table('sections')->insert($sections);

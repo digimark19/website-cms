@@ -1,5 +1,5 @@
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div id="mapa" {{ $attributes->merge(['class' => 'rounded-2xl shadow h-[70vh] w-full']) }}></div>
+<div class="w-full">
+    <div id="mapa" {{ $attributes->merge(['class' => 'shadow h-[70vh] w-full']) }}></div>
 </div>
 
 <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />

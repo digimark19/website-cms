@@ -39,4 +39,22 @@
     </div>
 
 </div>
-+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const heroBtn = document.querySelector('a[href="#sobre-mi-seccion"]');
+        if (heroBtn) {
+            heroBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector('#sobre-mi-seccion');
+                if (target) {
+                    const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - 100; // 100px offset for header
+                    window.scrollTo({
+                        top: targetPosition,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        }
+    });
+</script>
