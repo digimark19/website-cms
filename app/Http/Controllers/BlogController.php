@@ -40,11 +40,32 @@ class BlogController extends Controller
     {
         $lang = app()->getLocale();
 
-        $post = BlogPost::with(['translation' => fn($q) => $q->where('lang', $lang)])
+        // 1. Obtener el post actual con su traducción
+        $post = BlogPost::with(['translation' => fn($q) => $q->where('lang', $lang), 'category.translations'])
             ->whereHas('translation', fn($q) => $q->where('slug', $slug)->where('lang', $lang))
             ->firstOrFail();
-        // dd($post);
-        return view('pages.show', compact('post'));
+
+        // 2. Obtener categorías activas (con traducciones)
+        $categories = \App\Models\BlogCategory::with(['translations' => fn($q) => $q->where('lang', $lang)])
+            ->get();
+
+        // 3. Obtener posts recientes (los últimos 5)
+        $recentPosts = BlogPost::with(['translation' => fn($q) => $q->where('lang', $lang)])
+            ->where('status', 'published')
+            ->where('id', '!=', $post->id)
+            ->orderByDesc('published_at')
+            ->limit(5)
+            ->get();
+
+        // 4. Obtener posts relacionados (misma categoría)
+        $relatedPosts = BlogPost::with(['translation' => fn($q) => $q->where('lang', $lang)])
+            ->where('status', 'published')
+            ->where('category_id', $post->category_id)
+            ->where('id', '!=', $post->id)
+            ->limit(3)
+            ->get();
+
+        return view('pages.show', compact('post', 'categories', 'recentPosts', 'relatedPosts'));
     }
 
     /**

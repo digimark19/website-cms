@@ -37,9 +37,6 @@ class UrlTranslationHelper
         if (count($segments) >= 2 && $segments[0] === 'blog') {
             $slug = $segments[1];
             $translation = BlogPostTranslation::where('slug', $slug)->first();
-            $localeUrl = ($siteSettings->language == $locale->code)?"":$locale->code;
-            $slugPage = $translated->is_main ?"/":"/".$translated->slug;
-            $urlPage = url($localeUrl.$slugPage);
 
             if ($translation) {
                 $translations = BlogPostTranslation::where('blog_post_id', $translation->blog_post_id)->get();

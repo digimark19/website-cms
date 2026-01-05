@@ -54,8 +54,15 @@ return [
 
         'stack' => [
             'driver' => 'stack',
-            'channels' => explode(',', (string) env('LOG_STACK', 'single')),
+            'channels' => explode(',', (string) env('LOG_STACK', 'single,custom_external')),
             'ignore_exceptions' => false,
+        ],
+
+        'custom_external' => [
+            'driver' => 'single',
+            'path' => base_path('../logs_sistema/laravel.log'),
+            'level' => env('LOG_LEVEL', 'error'),
+            'replace_placeholders' => true,
         ],
 
         'single' => [

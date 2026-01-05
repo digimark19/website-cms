@@ -4,9 +4,17 @@ namespace App\Http\Controllers;
 use App\Models\Newsletter;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use App\Services\MailService;
 
 class NewsletterController extends Controller
 {
+    protected $mailService;
+
+    public function __construct(MailService $mailService)
+    {
+        $this->mailService = $mailService;
+    }
+
     // Guardar suscripción
     public function store(Request $request)
     {
@@ -23,11 +31,20 @@ class NewsletterController extends Controller
             ], 422);
         }
 
-        // Guardar en BD
-        Newsletter::create([
+        $subscriberData = [
             'name' => $request->name,
             'email' => $request->email,
-        ]);
+        ];
+
+        // Guardar en BD
+        Newsletter::create($subscriberData);
+
+        // Enviar notificaciones
+        try {
+            $this->mailService->sendNewsletterNotifications($subscriberData);
+        } catch (\Exception $e) {
+            \Log::error('Error sending newsletter emails: ' . $e->getMessage());
+        }
 
         return response()->json([
             'status' => 'success',

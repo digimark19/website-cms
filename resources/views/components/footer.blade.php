@@ -5,7 +5,7 @@
         <x-newsLetter />
 
     <!-- Sección Principal del Footer -->
-    <div class="bg-[#052669] pt-64 pb-12 mt-32 "> {{-- pt-64 crea más espacio para el newsletter flotante --}}
+    <div class="bg-[#052669] pt-40 pb-12 mt-32 "> {{-- pt-40 crea el espacio justo para el newsletter flotante --}}
         <div class="container mx-auto px-4">
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                 <!-- Logo y marca -->

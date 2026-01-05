@@ -95,3 +95,7 @@ Route::get('/limpiar-todo', function () {
     Artisan::call('view:clear');
     return '¡Caché limpiada y sistema reiniciado!';
 });
+
+Route::get('/test-error', function () {
+    throw new \Exception('Esto es un error de prueba para verificar los logs y notificaciones.');
+});
